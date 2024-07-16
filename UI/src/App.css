@@ -1,0 +1,75 @@
+@keyframes slide {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+.notification-bar {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: slide 15s linear infinite;
+}
+.interactive-box {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 2px solid transparent;
+}
+.interactive-box {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 2px solid #4A90E2; /* Add a blue border on hover */
+    background-color: #f0f8ff; /* Add a light blue background on hover */
+}
+.icon-bg {
+    transition: transform 0.3s;
+}
+.interactive-box:hover .icon-bg {
+    transform: rotate(360deg);
+}
+
+@keyframes bounce3d {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateZ(0) scale(1);
+    }
+    40% {
+      transform: translateZ(30px) scale(1.2);
+    }
+    60% {
+      transform: translateZ(15px) scale(1.1);
+    }
+  }
+  
+  .bounce-3d {
+    animation: bounce3d 2s infinite;
+    transform-style: preserve-3d;
+  }
+  
+  .bg-custom {
+    background-image: url('./assets/5610495.jpg');
+    background-size: cover;
+    /* width: auto;
+    height: auto; */
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+  
+  .combined-animation {
+    animation: spin 1s linear infinite, bounce 1s infinite;
+  }
