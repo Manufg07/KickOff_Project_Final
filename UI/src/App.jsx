@@ -17,6 +17,10 @@ import AdminRegister from "./Components/Admin/AdminRegister";
 import UserLayout from "./Layout/UserLayout";
 import UserProfile from "./Components/User/UserProfile";
 import Leagues from "./Components/User/Leagues";
+import UserForgot from "./Components/User/UserForgot";
+import Register from "./Components/User/Register";
+import AdminForgot from "./Components/Admin/AdminForgot";
+import ChampionsLeague from "./Components/User/ChampionsLeague";
 // import '../App.css'
 
 function App() {
@@ -29,6 +33,9 @@ function App() {
         <Route path="/admin-login" element={<AdminLoginPage/>}/>
         <Route path="/admin-register" element={<AdminRegister/>}/>
         <Route path="/user-login" element={<LoginPage/>}/>
+        <Route path="/user-register" element={<Register/>}/>
+        <Route path="/forgot" element={<UserForgot/>}/>
+        <Route path="/adminforgot" element={<AdminForgot/>}/>
       </Route>
 
 
@@ -46,7 +53,7 @@ function App() {
         <Route path="/FL" element={<FootballLeagues/>}/>
 
       </Route>
-
+      <Route path="/CL" element={<ChampionsLeague/>}/>
       </>
     )
   );
@@ -57,3 +64,4 @@ function App() {
 }
 
 export default App;
+

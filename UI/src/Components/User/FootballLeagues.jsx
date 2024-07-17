@@ -14,13 +14,13 @@ const FootballLeagues = () => {
     <div className="bg-white text-gray-900 font-sans">
       <nav className="bg-white shadow-lg p-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <span className="text-2xl font-bold text-blue-600">KICK off</span>
+          {/* <span className="text-2xl font-bold text-blue-600">KICK off</span> */}
           <span className="text-2xl font-bold text-blue-600">Leagues</span>
-          <input
+          {/* <input
             type="text"
             placeholder="Search..."
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />
+          /> */}
         </div>
       </nav>
 

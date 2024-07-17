@@ -30,8 +30,8 @@ const MainLandingPage = () => {
     <div className="flex items-end gap-1">
     <span className="text-6xl font-semibold dark:text-black bounce-3d">F</span>
       <svg
-        className="animate-spin"
-        fill="orange"
+        className="animate-bounce"
+        fill="yellow"
         width="30px"
         height="30px"
         viewBox="0 0 50 50"
@@ -86,4 +86,4 @@ const MainLandingPage = () => {
   )
 }
 
-export default MainLandingPage
+export default MainLandingPage;

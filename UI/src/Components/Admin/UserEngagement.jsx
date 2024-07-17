@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { Chart as ChartJS, Tooltip, Legend } from 'chart.js';
@@ -6,47 +6,51 @@ import { Chart as ChartJS, Tooltip, Legend } from 'chart.js';
 ChartJS.register(Tooltip, Legend);
 
 const UserEngagement = () => {
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: 'Likes',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
-        data: [65, 59, 80, 81, 56, 55],
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: 'Comments',
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-        borderColor: 'rgba(153, 102, 255, 1)',
-        pointBackgroundColor: 'rgba(153, 102, 255, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(153, 102, 255, 1)',
-        data: [28, 48, 40, 19, 86, 27],
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: 'Shares',
-        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-        borderColor: 'rgba(255, 159, 64, 1)',
-        pointBackgroundColor: 'rgba(255, 159, 64, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(255, 159, 64, 1)',
-        data: [35, 23, 60, 75, 64, 42],
-        fill: true,
-        tension: 0.4,
-      },
-    ],
+  const [registrationData, setRegistrationData] = useState({
+    labels: [],
+    datasets: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch user registration data
+    fetch('/admin/user-registrations')
+      .then(response => response.json())
+      .then(data => {
+        const formattedData = formatRegistrationData(data);
+        setRegistrationData(formattedData);
+        setIsLoading(false); // Data has been fetched and processed
+      })
+      .catch(error => {
+        console.error('Error fetching registration data:', error);
+        setIsLoading(false); // Even if there's an error, we stop the loading state
+      });
+  }, []);
+
+  const formatRegistrationData = (data) => {
+    // Assuming data is an array of objects with _id as month number and count as registration count
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const counts = Array(12).fill(0);
+    data.forEach(item => {
+      counts[item._id - 1] = item.count; // -1 because _id is 1 for Jan, 2 for Feb, etc.
+    });
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: 'User Registrations',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+          data: counts,
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
   };
 
   const options = {
@@ -104,11 +108,15 @@ const UserEngagement = () => {
   return (
     <div className="container mx-auto p-4 ml-40">
       <header className="mb-4">
-        <h1 className="text-2xl font-bold text-center text-gray-800">User Engagement</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800">User Registration Growth</h1>
       </header>
       <main className="bg-white p-4 rounded-lg shadow-lg">
         <div className="max-w-md mx-auto">
-          <Line data={data} options={options} />
+          {isLoading ? (
+            <p>Loading...</p> // Show loading state while fetching data
+          ) : (
+            <Line data={registrationData} options={options} />
+          )}
         </div>
       </main>
     </div>
