@@ -1,5 +1,5 @@
 import React from 'react'
-import AdminHomePage from '../../Pages/Admin/AdminHomePage'
+// import AdminHomePage from '../../Pages/Admin/AdminHomePage'
 import { Link } from 'react-router-dom'
 
 const AdminNavBar = () => {

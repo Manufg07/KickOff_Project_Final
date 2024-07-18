@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Post from './Post';
 import Leagues from './Leagues';
 import UpdateProfile from './UpdateProfile';
+import favteam from '../../assets/Land.jpeg' 
+import pl from '../../assets/204.jpg'
 
 const SidebarLeft = () => {
   const [user, setUser] = useState({
@@ -66,7 +68,7 @@ const SidebarLeft = () => {
           <div>
             <h3 className="text-md font-semibold">Favorite Team</h3>
             <div className="mb-2 flex items-center">
-              <img src="https://via.placeholder.com/40" alt="Fav_Team" className="w-10 h-10 rounded-full mr-2" />
+              <img src={favteam} alt="Fav_Team" className="w-10 h-10 rounded-full mr-2" />
               <span>{user.fav_team1}</span>
             </div>
           </div>
@@ -75,7 +77,7 @@ const SidebarLeft = () => {
           <div>
             <h3 className="text-md font-semibold">Favorite Player</h3>
             <div className="mb-2 flex items-center">
-              <img src="https://via.placeholder.com/40" alt="Fav_Player" className="w-10 h-10 rounded-full mr-2" />
+              <img src={pl} alt="Fav_Player" className="w-10 h-10 rounded-full mr-2" />
               <span>{user.fav_player}</span>
             </div>
           </div>

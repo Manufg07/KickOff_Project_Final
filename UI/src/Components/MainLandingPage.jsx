@@ -25,10 +25,10 @@ const MainLandingPage = () => {
     className="item"
      drag dragConstraints={constraintsRef} 
      >
-    <div className="border border-gray-200 p-2 rounded-md shadow-lg shadow-red-500" >
+    <div className="border border-gray-200 p-2  rounded-md shadow-lg shadow-red-500" >
   
     <div className="flex items-end gap-1">
-    <span className="text-6xl font-semibold dark:text-black bounce-3d">Kick</span>
+    <span className="text-6xl font-semibold dark:text-black ">Kick</span>
       {/* <svg
         className="animate-bounce"
         fill="yellow"
@@ -45,9 +45,9 @@ const MainLandingPage = () => {
       </svg> */}
       <svg
         className="combined-animation"
-        fill="aqua"
-        width="30px"
-        height="30px"
+        fill="purple"
+        width="35px"
+        height="35px"
         viewBox="0 0 50 50"
         xmlns="http://www.w3.org/2000/svg"
       >

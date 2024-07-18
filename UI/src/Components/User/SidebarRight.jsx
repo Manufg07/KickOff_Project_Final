@@ -8,7 +8,7 @@ const SidebarRight = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch friend suggestions from the API
+    // friend suggestions 
     fetch('/api/user/friend-suggestions', {
       method: 'GET',
       headers: {
@@ -17,7 +17,7 @@ const SidebarRight = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log('Friend Suggestions:', data); // Debugging line
+        console.log('Friend Suggestions:', data); 
         setFriendSuggestions(data);
         setLoading(false);
       })

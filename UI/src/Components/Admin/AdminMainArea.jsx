@@ -3,40 +3,40 @@ import React, { useEffect } from 'react';
 const AdminMainArea = () => {
 
   useEffect(() => {
-    // Fetch total users
+   
     fetch('/api/admin/totalUsers', {
       headers: {
         'Content-Type': 'application/json'
       }
     })
     .then(response => {
-      console.log('Fetch total users response status:', response.status); // Debugging log
+      console.log('Fetch total users response status:', response.status); 
       if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) }); // Handle non-JSON responses
+        return response.text().then(text => { throw new Error(text) }); // json
       }
       return response.json();
     })
     .then(data => {
-      console.log('Received total users data:', data); // Debugging log
+      console.log('Received total users data:', data); 
       document.getElementById('totalUsers').innerText = data.totalUsers;
     })
     .catch(error => console.error('Error fetching total users:', error));
     
-  // Fetch total posts
+  
   fetch('/api/admin/totalPosts', {
     headers: {
       'Content-Type': 'application/json'
     }
   })
   .then(response => {
-    console.log('Fetch total posts response status:', response.status); // Debugging log
+    console.log('Fetch total posts response status:', response.status); 
     if (!response.ok) {
-      return response.text().then(text => { throw new Error(text) }); // Handle non-JSON responses
+      return response.text().then(text => { throw new Error(text) }); 
     }
     return response.json();
   })
   .then(data => {
-    console.log('Received total posts data:', data); // Debugging log
+    console.log('Received total posts data:', data); // Debugging 
     document.getElementById('totalPosts').innerText = data.totalPosts;
   })
   .catch(error => console.error('Error fetching total posts:', error));
