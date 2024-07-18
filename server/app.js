@@ -35,6 +35,9 @@ app.use("/admin", adminRoute);
 app.use('/user', userRoutes);
 app.use('/pt', postRoutes);
 
+// app.get('/admin/dashboard', verifyAdminToken, (req, res) => {
+//   res.send('Welcome to the Admin Dashboard');
+// });
 
 const PORT = 5000;
 app.listen(PORT, () => {

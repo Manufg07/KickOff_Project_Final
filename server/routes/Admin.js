@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 const User = require('../models/User'); // 
+const Post = require('../models/Post')
 const verifyAdminToken = require('../middleware/VerifyAdminToken'); //
 const router = express.Router();
 
@@ -68,7 +69,7 @@ router.post('/login', async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { adminId: admin._id },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
@@ -91,6 +92,16 @@ router.get('/totalUsers',  async (req, res) => {
   }
 });
 
+//post
+router.get('/totalPosts', async (req, res) => {
+  try {
+    const totalPosts = await Post.countDocuments({});
+    res.json({ totalPosts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total posts');
+  }
+});
 
 router.get('/users', async (req, res) => {
   try {
@@ -102,25 +113,6 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// Endpoint to get user registration data
-router.get('/user-registrations', async (req, res) => {
-  try {
-      const users = await User.aggregate([
-          {
-              $group: {
-                  _id: { $month: "$createdAt" },
-                  count: { $sum: 1 }
-              }
-          },
-          {
-              $sort: { _id: 1 }
-          }
-      ]);
-      res.json(users);
-  } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Error fetching user registration data' });
-  }});
 
 // DELETE user by userId
 router.delete('/users/:userId', async (req, res) => {
@@ -135,6 +127,37 @@ router.delete('/users/:userId', async (req, res) => {
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+//fetch post
+router.get('/posts', async (req, res) => {
+  try {
+    const posts = await Post.find({});
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching posts' });
+  }
+});
+
+// Endpoint to get user registrations per month
+router.get('/user-registrations', async (req, res) => {
+  try {
+    const registrations = await User.aggregate([
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json(registrations);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching registration data' });
   }
 });
 

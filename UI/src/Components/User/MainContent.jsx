@@ -49,7 +49,7 @@ const MainContent = () => {
             )}
             {post.video && (
               <video controls className="mt-2">
-                <source src={`/uploads/${post.video}`} type="video/mp4" />
+                <source src={`http://localhost:5000/uploads/${post.video}`} type="video/mp4" />
               </video>
             )}
             <p className="text-gray-700">{post.text}</p>

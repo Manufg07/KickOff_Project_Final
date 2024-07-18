@@ -21,6 +21,7 @@ import UserForgot from "./Components/User/UserForgot";
 import Register from "./Components/User/Register";
 import AdminForgot from "./Components/Admin/AdminForgot";
 import ChampionsLeague from "./Components/User/ChampionsLeague";
+import UserResetPassword from "./Components/User/UserResetPassword";
 // import '../App.css'
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
         <Route path="/user-register" element={<Register/>}/>
         <Route path="/forgot" element={<UserForgot/>}/>
         <Route path="/adminforgot" element={<AdminForgot/>}/>
+        <Route path="/forgot-password" element={<UserForgot/>}/>
+        <Route path="/reset-password" element={<UserResetPassword/>}/>
       </Route>
 
 

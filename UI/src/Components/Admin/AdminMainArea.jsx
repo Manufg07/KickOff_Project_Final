@@ -21,7 +21,26 @@ const AdminMainArea = () => {
       document.getElementById('totalUsers').innerText = data.totalUsers;
     })
     .catch(error => console.error('Error fetching total users:', error));
-  }, []);
+    
+  // Fetch total posts
+  fetch('/api/admin/totalPosts', {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    console.log('Fetch total posts response status:', response.status); // Debugging log
+    if (!response.ok) {
+      return response.text().then(text => { throw new Error(text) }); // Handle non-JSON responses
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Received total posts data:', data); // Debugging log
+    document.getElementById('totalPosts').innerText = data.totalPosts;
+  })
+  .catch(error => console.error('Error fetching total posts:', error));
+}, []);
 
   return (
     <>

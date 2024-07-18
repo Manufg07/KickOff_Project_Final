@@ -71,4 +71,19 @@ router.get('/posts/user/:userId', authMiddleware, async (req, res) => {
   }
 });
 
+router.delete('/posts/:postId', async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findByIdAndDelete(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
 module.exports = router;

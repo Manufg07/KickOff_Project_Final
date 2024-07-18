@@ -53,7 +53,7 @@ const ViewUser = () => {
                     <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{user.phone}</td>
                     <td className="px-32 py-4 whitespace-nowrap">
-                      <button className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Edit</button>
+                      {/* <button className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">Edit</button> */}
                       <button className="bg-red-500 text-white rounded px-4 py-2 ml-2 hover:bg-red-600" onClick={() => handleDelete(user.userId)}>Delete</button>
                     </td>
                   </tr>

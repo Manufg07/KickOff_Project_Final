@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import uefa from '../../assets/uefA.jpeg'
+import match2 from '../../assets/Real.jpeg'
+
 
 const SidebarRight = () => {
   const [friendSuggestions, setFriendSuggestions] = useState([]);
@@ -68,11 +71,11 @@ const SidebarRight = () => {
       <div>
         <h3 className="text-md font-semibold">Recent Matches</h3>
         <div className="mb-2">
-          <img src="/images/RM vs FCB.jpeg" alt="Match 1" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src={uefa} alt="Match 1" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
           <p className="text-gray-600">Team A vs Team B</p>
         </div>
         <div className="mb-2">
-          <img src="/images/FB.jpeg" alt="Match 2" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src={match2} alt="Match 2" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
           <p className="text-gray-600">Team C vs Team D</p>
         </div>
       </div>
