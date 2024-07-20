@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Post from './Post';
 import Leagues from './Leagues';
 import UpdateProfile from './UpdateProfile';
-import favteam from '../../assets/Land.jpeg' 
-import pl from '../../assets/204.jpg'
+import favteam from '../../assets/Land.jpeg';
+import pl from '../../assets/204.jpg';
 
 const SidebarLeft = () => {
   const [user, setUser] = useState({
@@ -39,13 +39,15 @@ const SidebarLeft = () => {
       .catch(error => console.error('Error fetching connected friends:', error));
   };
 
+  const updateConnectedFriends = () => {
+    fetchConnectedFriends();
+  };
+
   return (
     <>
-      {/* <!-- Sidebar L--> */}
       <div className="col-span-3 bg-white shadow-lg p-4 space-y-4 rounded-lg">
         <h2 className="text-lg font-semibold text-purple-600">Dashboard</h2>
         <div className="space-y-4">
-          {/* <!-- Connected Friends--> */}
           <div>
             <h3 className="text-md font-semibold">Connected Friends</h3>
             <div id="connectedFriends">
@@ -62,9 +64,6 @@ const SidebarLeft = () => {
             </div>
           </div>
 
-          {/* <Post /> */}
-
-          {/* <!-- Favorite Team--> */}
           <div>
             <h3 className="text-md font-semibold">Favorite Team</h3>
             <div className="mb-2 flex items-center">
@@ -73,7 +72,6 @@ const SidebarLeft = () => {
             </div>
           </div>
 
-          {/* <!-- Favorite Player--> */}
           <div>
             <h3 className="text-md font-semibold">Favorite Player</h3>
             <div className="mb-2 flex items-center">

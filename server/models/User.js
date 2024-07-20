@@ -40,10 +40,10 @@ const userSchema = new Schema({
         trim: true,
     },    
     profilePicture: { type: String },
-    friends: {
-        type: Array,
-        default: [],
-      },
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      }],
     },
     {
         timestamps: true,

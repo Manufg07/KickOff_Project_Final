@@ -82,19 +82,25 @@ router.post('/update-profile', auth, profileUpload.single('profilePicture'), asy
   }
 });
 
+// Utility function to shuffle an array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 // Endpoint to get friend suggestions
 router.get('/friend-suggestions', verifyToken, async (req, res) => {
   const loggedInUserId = req.user.userId;
 
   try {
-    // Find all users except the logged-in user
     let users = await User.find({ _id: { $ne: loggedInUserId } }).select('username _id');
-
-    // Shuffle the user list to provide random suggestions
     users = shuffleArray(users);
-
     res.json(users);
   } catch (error) {
+    console.error('Error fetching friend suggestions:', error);
     res.status(500).json({ error: 'Failed to fetch friend suggestions' });
   }
 });
@@ -127,7 +133,9 @@ router.get('/connected-friends', verifyToken, async (req, res) => {
   const loggedInUserId = req.user.userId;
 
   try {
-    const loggedInUser = await User.findById(loggedInUserId).populate('friends', 'username');
+    const loggedInUser = await User.findById(loggedInUserId)
+      .populate('friends', 'username profilePicture'); // include profilePicture
+
     if (!loggedInUser) {
       return res.status(404).json({ error: 'User not found' });
     }

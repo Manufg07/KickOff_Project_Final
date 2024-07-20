@@ -97,22 +97,20 @@ import React, { useEffect, useState } from 'react';
 import uefa from '../../assets/uefA.jpeg';
 import match2 from '../../assets/Real.jpeg';
 
-const SidebarRight = () => {
+const SidebarRight = ({ updateConnectedFriends }) => {
   const [friendSuggestions, setFriendSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch friend suggestions
     fetch('/api/user/friend-suggestions', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(response => response.json())
       .then(data => {
-        console.log('Friend Suggestions:', data);
-        // Ensure the data is an array before setting the state
         if (Array.isArray(data)) {
           setFriendSuggestions(data);
         } else {
@@ -123,7 +121,6 @@ const SidebarRight = () => {
       })
       .catch(error => {
         console.error('Error fetching friend suggestions:', error);
-        setFriendSuggestions([]);
         setLoading(false);
       });
   }, []);
@@ -132,13 +129,22 @@ const SidebarRight = () => {
     fetch(`/api/user/follow/${userId}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(response => response.json())
       .then(data => {
-        console.log('Follow successful:', data);
-        // Optionally update the state or UI here
+        if (data.success) {
+          console.log('Follow successful:', data);
+          setFriendSuggestions((prevSuggestions) =>
+            prevSuggestions.filter((friend) => friend._id !== userId)
+          );
+          // Update connected friends list in SidebarLeft
+          updateConnectedFriends();
+        } else {
+          console.error('Follow failed:', data);
+        }
       })
       .catch(error => {
         console.error('Error following user:', error);

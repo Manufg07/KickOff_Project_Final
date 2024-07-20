@@ -4,6 +4,7 @@ const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [connectedFriends, setConnectedFriends] = useState([]);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -42,12 +43,13 @@ const UserProfile = () => {
           profilePicture: data.profilePicture || ''
         });
         fetchUserPosts(); // Fetch posts after fetching user data
+        fetchConnectedFriends(); // Fetch connected friends after fetching user data
       })
       .catch(error => console.error('Error fetching user details:', error));
   };
 
   const fetchUserPosts = () => {
-    fetch('/api/posts/user', {
+    fetch('/api/pt/posts/user', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -64,6 +66,26 @@ const UserProfile = () => {
         setUserPosts(posts);
       })
       .catch(error => console.error('Error fetching user posts:', error));
+  };
+
+  const fetchConnectedFriends = () => {
+    fetch('/api/user/connected-friends', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then(response => {
+        console.log('API Response:', response);
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text) });
+        }
+        return response.json();
+      })
+      .then(friends => {
+        console.log('Connected Friends:', friends);
+        setConnectedFriends(friends);
+      })
+      .catch(error => console.error('Error fetching connected friends:', error));
   };
 
   const handleInputChange = (e) => {
@@ -119,7 +141,7 @@ const UserProfile = () => {
           <p className="text-gray-600 text-center">Favorite Team: {userData.fav_team1}</p>
           <p className="text-gray-600 text-center">Favorite Player: {userData.fav_player}</p>
         </div>
-        {isEditing ? (
+        {/* {isEditing ? (
           <form onSubmit={handleFormSubmit} className="mt-6">
             <div className="mb-4">
               <label className="block text-gray-700">Username</label>
@@ -192,10 +214,31 @@ const UserProfile = () => {
           >
             Edit Profile
           </button>
-        )}
+        )} */}
         <div className="mt-6 text-center">
           <h2 className="text-xl font-semibold">Friends</h2>
           <p className="text-gray-600">Number of Friends: {userData.friends?.length || 0}</p>
+          <ul className="mt-2">
+            {userData.friends?.map(friend => (
+              <li key={friend._id} className="text-gray-700">{friend.username}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="mt-6 flex flex-col items-center justify-center">
+          <ul className="mt-2">
+            {connectedFriends.map(friend => (
+              <li key={friend._id} className="text-gray-700 flex items-center justify-center my-2">
+                {friend.profilePicture && (
+                  <img
+                    src={`/api/uploads/profile_pictures/${friend.profilePicture}`}
+                    alt="Friend Profile"
+                    className="w-8 h-8 rounded-full object-cover mr-2"
+                  />
+                )}
+                {friend.username}
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="mt-6 text-center">
           <h2 className="text-xl font-semibold">Posts</h2>
@@ -203,8 +246,7 @@ const UserProfile = () => {
           <div className="mt-4">
             {userPosts.map((post) => (
               <div key={post._id} className="mb-4 text-left">
-                <h3 className="text-lg font-semibold">{post.title}</h3>
-                <p className="text-gray-700">{post.content}</p>
+                <h3 className="text-lg font-semibold">{post.text}</h3>
                 {post.image && <img src={`/api/uploads/${post.image}`} alt="Post" className="mt-2" />}
                 {post.video && (
                   <video controls className="mt-2">

@@ -89,7 +89,7 @@ router.delete('/posts/:postId', async (req, res) => {
 
 router.get('/posts/user', authMiddleware, async (req, res) => {
   try {
-    const userId = req.user.userId; // Get the user ID from the auth middleware
+    const userId = req.user._id;
     const posts = await Post.find({ user: userId })
       .populate('user', ['username', 'profilePicture'])
       .sort({ createdAt: -1 });
