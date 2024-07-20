@@ -26,7 +26,9 @@ const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-green-400 to-blue-500 shadow-lg p-4 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <span className="text-2xl font-bold text-white">KICK off</span>
+        <Link to="/home">
+          <span className="text-2xl font-bold text-white">KICK off</span>
+        </Link>
         <input
           type="text"
           placeholder="Search..."
