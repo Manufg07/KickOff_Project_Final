@@ -62,7 +62,7 @@ const SidebarLeft = () => {
             </div>
           </div>
 
-          <Post />
+          {/* <Post /> */}
 
           {/* <!-- Favorite Team--> */}
           <div>

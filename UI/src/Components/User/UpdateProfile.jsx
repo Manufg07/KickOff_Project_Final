@@ -7,8 +7,10 @@ const UpdateProfile = () => {
     email: '',
     phone: '',
     fav_team1: '',
-    fav_player: ''
+    fav_player: '',
+    profilePicture: null,
   });
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
 
   const fetchUserData = () => {
     fetch('/api/user/profile', {
@@ -16,14 +18,16 @@ const UpdateProfile = () => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
-    .then(response => {
-        console.log(response); // Log the response status
-        console.log(response.headers);
-        return response.json();
+      .then(response => response.json())
+      .then(data => {
+        setUser(data);
+        if (data.profilePicture) {
+          setProfilePictureUrl(`/api/uploads/profile_pictures/${data.profilePicture}`);
+        }
       })
-      .then(data => setUser(data))
       .catch(error => console.error('Error fetching user details:', error));
-    }
+  };
+
   const toggleUpdateSection = () => {
     if (!isUpdateSectionVisible) {
       fetchUserData();
@@ -32,22 +36,34 @@ const UpdateProfile = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    const { name, value, files } = e.target;
+    if (name === 'profilePicture') {
+      setUser(prevState => ({
+        ...prevState,
+        profilePicture: files[0]
+      }));
+      setProfilePictureUrl(URL.createObjectURL(files[0]));
+    } else {
+      setUser(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    Object.keys(user).forEach(key => {
+      formData.append(key, user[key]);
+    });
+
     fetch('/api/user/update-profile', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify(user)
+      body: formData
     })
       .then(response => response.json())
       .then(data => {
@@ -55,6 +71,9 @@ const UpdateProfile = () => {
           console.error('Error updating profile:', data.error);
         } else {
           alert('Profile updated successfully!');
+          if (data.user.profilePicture) {
+            setProfilePictureUrl(`/uploads/profile_pictures/${data.user.profilePicture}`);
+          }
         }
       })
       .catch(error => console.error('Error updating profile:', error));
@@ -73,8 +92,17 @@ const UpdateProfile = () => {
       </div>
 
       {isUpdateSectionVisible && (
-        <div id="updateSection" className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto  border border-gray-300">
+        <div id="updateSection" className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto border border-gray-300">
           <h2 className="text-2xl font-bold mb-6">Update Your Information</h2>
+          {profilePictureUrl && (
+            <div className="mb-4">
+              <img
+                src={profilePictureUrl}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover mx-auto"
+              />
+            </div>
+          )}
           <form id="updateForm" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="username" className="block text-gray-700">Username</label>
@@ -134,6 +162,16 @@ const UpdateProfile = () => {
                 value={user.fav_player}
                 onChange={handleChange}
                 required
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="profilePicture" className="block text-gray-700">Profile Picture</label>
+              <input
+                type="file"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                id="profilePicture"
+                name="profilePicture"
+                onChange={handleChange}
               />
             </div>
             <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">

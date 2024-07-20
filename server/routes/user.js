@@ -5,6 +5,7 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const { profileUpload } = require('./multerConfig')
 const verifyToken = require('../middleware/authMiddleware');
 
 // Fetch user profile
@@ -24,35 +25,62 @@ router.get('/profile', auth, async (req, res) => {
   });
   
 // Update user profile
-router.post('/update-profile', auth, async (req, res) => {
-    const { username, email, phone, fav_team1, fav_player } = req.body;
+// router.post('/update-profile', auth, async (req, res) => {
+//     const { username, email, phone, fav_team1, fav_player } = req.body;
   
-    try {
-      // Update user details in database
-      const user = await User.findByIdAndUpdate(
-        req.user.userId,
-        { username, email, phone, fav_team1, fav_player },
-        { new: true }
-      );
+//     try {
+//       // Update user details in database
+//       const user = await User.findByIdAndUpdate(
+//         req.user.userId,
+//         { username, email, phone, fav_team1, fav_player },
+//         { new: true }
+//       );
   
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+//       if (!user) {
+//         return res.status(404).json({ error: 'User not found' });
+//       }
   
-      res.json({ message: 'Profile updated successfully', user });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+//       res.json({ message: 'Profile updated successfully', user });
+//     } catch (error) {
+//       res.status(500).json({ error: error.message });
+//     }
+//   });
 
-// Helper function to shuffle array
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+// // Helper function to shuffle array
+// const shuffleArray = (array) => {
+//   for (let i = array.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [array[i], array[j]] = [array[j], array[i]];
+//   }
+//   return array;
+// };
+
+router.post('/update-profile', auth, profileUpload.single('profilePicture'), async (req, res) => {
+  const { username, email, phone, fav_team1, fav_player } = req.body;
+  const profilePicture = req.file ? req.file.filename : null;
+
+  try {
+    const updateData = { username, email, phone, fav_team1, fav_player };
+    if (profilePicture) {
+      updateData.profilePicture = profilePicture;
+    }
+
+    // Update user details in the database
+    const user = await User.findByIdAndUpdate(
+      req.user.userId,
+      updateData,
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ message: 'Profile updated successfully', user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  return array;
-};
+});
 
 // Endpoint to get friend suggestions
 router.get('/friend-suggestions', verifyToken, async (req, res) => {

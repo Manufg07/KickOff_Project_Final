@@ -54,9 +54,9 @@ function App() {
         <Route path="/profile" element={<UserProfile/>}/>
         <Route path="/leagues" element={<Leagues/>}/>
         <Route path="/FL" element={<FootballLeagues/>}/>
-
       </Route>
       <Route path="/CL" element={<ChampionsLeague/>}/>
+      
       </>
     )
   );

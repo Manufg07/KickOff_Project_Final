@@ -9,7 +9,8 @@ const UserProfile = () => {
     email: '',
     phone: '',
     fav_team1: '',
-    fav_player: ''
+    fav_player: '',
+    profilePicture: ''
   });
 
   useEffect(() => {
@@ -37,7 +38,8 @@ const UserProfile = () => {
           email: data.email,
           phone: data.phone,
           fav_team1: data.fav_team1,
-          fav_player: data.fav_player
+          fav_player: data.fav_player,
+          profilePicture: data.profilePicture || ''
         });
         fetchUserPosts(); // Fetch posts after fetching user data
       })
@@ -45,7 +47,7 @@ const UserProfile = () => {
   };
 
   const fetchUserPosts = () => {
-    fetch('/api/user/posts', {
+    fetch('/api/posts/user', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -101,16 +103,21 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        <div className="flex items-center space-x-4">
-          <div>
-            <h1 className="text-2xl font-bold">{userData.username}</h1>
-            <p className="text-gray-600">{userData.email}</p>
-            <p className="text-gray-600">{userData.phone}</p>
-            <p className="text-gray-600">Favorite Team: {userData.fav_team1}</p>
-            <p className="text-gray-600">Favorite Player: {userData.fav_player}</p>
-          </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
+        <div className="flex flex-col items-center space-y-4">
+          {userData.profilePicture && (
+            <img
+              src={`/api/uploads/profile_pictures/${userData.profilePicture}`}
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover"
+            />
+          )}
+          <h1 className="text-2xl font-bold text-center">{userData.username}</h1>
+          <p className="text-gray-600 text-center">{userData.email}</p>
+          <p className="text-gray-600 text-center">{userData.phone}</p>
+          <p className="text-gray-600 text-center">Favorite Team: {userData.fav_team1}</p>
+          <p className="text-gray-600 text-center">Favorite Player: {userData.fav_player}</p>
         </div>
         {isEditing ? (
           <form onSubmit={handleFormSubmit} className="mt-6">
@@ -181,27 +188,27 @@ const UserProfile = () => {
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm"
+            className="mt-6 ml-64 px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm"
           >
             Edit Profile
           </button>
         )}
-        <div className="mt-6">
+        <div className="mt-6 text-center">
           <h2 className="text-xl font-semibold">Friends</h2>
           <p className="text-gray-600">Number of Friends: {userData.friends?.length || 0}</p>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 text-center">
           <h2 className="text-xl font-semibold">Posts</h2>
           <p className="text-gray-600">Number of Posts: {userPosts.length || 0}</p>
           <div className="mt-4">
             {userPosts.map((post) => (
-              <div key={post._id} className="mb-4">
+              <div key={post._id} className="mb-4 text-left">
                 <h3 className="text-lg font-semibold">{post.title}</h3>
                 <p className="text-gray-700">{post.content}</p>
-                {post.image && <img src={post.image} alt="Post" className="mt-2" />}
+                {post.image && <img src={`/api/uploads/${post.image}`} alt="Post" className="mt-2" />}
                 {post.video && (
                   <video controls className="mt-2">
-                    <source src={post.video} type="video/mp4" />
+                    <source src={`/api/uploads/${post.video}`} type="video/mp4" />
                   </video>
                 )}
               </div>

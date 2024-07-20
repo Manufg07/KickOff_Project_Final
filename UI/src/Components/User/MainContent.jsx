@@ -41,15 +41,17 @@ const MainContent = () => {
         {error && <p className="text-red-500">{error}</p>}
         {posts.map((post) => (
           <div key={post._id} className="mb-4">
-            <h3 className="text-lg font-semibold">{post.user.username}</h3>
-            
+            {/* <h3 className="text-lg font-semibold">{post.user.username}</h3> */}
+            <h3 className="text-lg font-semibold">
+              {post.user ? post.user.username : 'Unknown User'}
+            </h3>
             {post.image && (
-              <img src={`http://localhost:5000/uploads/${post.image}`} alt={`Post Image - ${post.text}`} className="mt-2" />
+              <img src={`/api/uploads/${post.image}`} alt={`Post Image - ${post.text}`} className="mt-2" />
 
             )}
             {post.video && (
               <video controls className="mt-2">
-                <source src={`http://localhost:5000/uploads/${post.video}`} type="video/mp4" />
+                <source src={`/api/uploads/${post.video}`} type="video/mp4" />
               </video>
             )}
             <p className="text-gray-700">{post.text}</p>
@@ -61,3 +63,4 @@ const MainContent = () => {
 };
 
 export default MainContent;
+

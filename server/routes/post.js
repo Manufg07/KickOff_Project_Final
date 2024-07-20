@@ -86,4 +86,18 @@ router.delete('/posts/:postId', async (req, res) => {
   }
 });
 
+
+router.get('/posts/user', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId; // Get the user ID from the auth middleware
+    const posts = await Post.find({ user: userId })
+      .populate('user', ['username', 'profilePicture'])
+      .sort({ createdAt: -1 });
+    res.json(posts);
+  } catch (error) {
+    console.error('Error fetching user posts:', error);
+    res.status(500).json({ error: 'Could not fetch user posts' });
+  }
+});
+
 module.exports = router;
