@@ -96,7 +96,7 @@ router.get('/friend-suggestions', verifyToken, async (req, res) => {
   const loggedInUserId = req.user.userId;
 
   try {
-    let users = await User.find({ _id: { $ne: loggedInUserId } }).select('username _id');
+    let users = await User.find({ _id: { $ne: loggedInUserId } }).select('username _id profilePicture');
     users = shuffleArray(users);
     res.json(users);
   } catch (error) {
@@ -104,6 +104,7 @@ router.get('/friend-suggestions', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch friend suggestions' });
   }
 });
+
 
 // Endpoint to follow a user
 router.post('/follow/:userId', verifyToken, async (req, res) => {
