@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { HeartIcon } from '@heroicons/react/solid'; // For filled heart
-import { HeartIcon as HeartIconOutline } from '@heroicons/react/outline'; // For outline heart
+import { HeartIcon } from '@heroicons/react/solid';
+import { HeartIcon as HeartIconOutline } from '@heroicons/react/outline';
 import Post from './Post';
 import '../../App.css';
 
@@ -89,6 +89,7 @@ const MainContent = () => {
   };
 
   const handleComment = async (postId, text) => {
+    console.log('Posting Comment:', { postId, text }); // Debugging log
     try {
       const response = await fetch(`/api/pt/posts/${postId}/comment`, {
         method: 'POST',
@@ -161,88 +162,88 @@ const MainContent = () => {
                   )}
                 </button>
                 <span
-                  className="ml-1 cursor-pointer"
+                  className="ml-1 cursor-pointer mt-1"
                   onClick={() => toggleShowLikedUsers(post._id)}
                 >
-                  {post.likes.length}
+                  {post.likes.length} likes
                 </span>
+                {showLikedUsers[post._id] && (
+                  <div
+                    ref={(el) => (likedUsersRefs.current[post._id] = el)}
+                    className="absolute left-0 mt-2 bg-white border border-gray-300 rounded-lg p-2 shadow-lg z-10 w-64"
+                  >
+                    <h4 className="text-md font-semibold mb-2">Liked by</h4>
+                    {post.likes.length > 0 ? (
+                      post.likes.map((like) => (
+                        <div key={like._id} className="flex items-center mt-2">
+                          {like.profilePicture && (
+                            <img
+                              src={`/api/uploads/profile_pictures/${like.profilePicture}`}
+                              alt={`${like.username}'s profile`}
+                              className="w-8 h-8 rounded-full object-cover mr-2"
+                            />
+                          )}
+                          <span className="text-gray-800 font-semibold">{like.username}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-600">No likes yet</p>
+                    )}
+                  </div>
+                )}
               </div>
-              <span
-                className="text-gray-600 cursor-pointer mt-1"
-                onClick={() => toggleShowLikedUsers(post._id)}
-              >
-                likes
-              </span>
-              {showLikedUsers[post._id] && (
-                <div
-                  ref={(el) => (likedUsersRefs.current[post._id] = el)}
-                  className="absolute left-0 mt-2 bg-white border border-gray-300 rounded-lg p-2 shadow-lg z-10 w-64"
-                >
-                  <h4 className="text-md font-semibold mb-2">Liked by</h4>
-                  {post.likes.length > 0 ? (
-                    post.likes.map((like) => (
-                      <div key={like._id} className="flex items-center mt-2">
-                        {like.profilePicture && (
-                          <img
-                            src={`/api/uploads/profile_pictures/${like.profilePicture}`}
-                            alt={`${like.username}'s profile`}
-                            className="w-8 h-8 rounded-full object-cover mr-2"
-                          />
-                        )}
-                        <span className="text-gray-800 font-semibold">{like.username}</span>
+              {post.comments.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-md font-semibold">Comments</h4>
+                  {post.comments.slice(0, showAllComments[post._id] ? post.comments.length : 2).map((comment) => (
+                    <div key={comment._id} className="mt-2 flex items-start">
+                      {comment.user.profilePicture && (
+                        <img
+                          src={`/api/uploads/profile_pictures/${comment.user.profilePicture}`}
+                          alt={`${comment.user.username}'s profile`}
+                          className="w-8 h-8 rounded-full object-cover mr-2"
+                        />
+                      )}
+                      <div>
+                        <span className="text-gray-800 font-semibold">{comment.user.username}</span>
+                        <p className="text-gray-600">{comment.text}</p>
                       </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-600">No likes yet</p>
+                    </div>
+                  ))}
+                  {post.comments.length > 2 && (
+                    <button
+                      onClick={() => toggleShowAllComments(post._id)}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {showAllComments[post._id] ? 'Hide comments' : 'View all comments'}
+                    </button>
                   )}
                 </div>
               )}
-            </div>
-            {post.comments.length > 0 && (
-              <div className="mt-4">
-                <h4 className="text-md font-semibold">Comments</h4>
-                {post.comments.slice(0, showAllComments[post._id] ? post.comments.length : 2).map((comment) => (
-                  <div key={comment._id} className="mt-2 flex items-start">
-                    {comment.user.profilePicture && (
-                      <img
-                        src={`/api/uploads/profile_pictures/${comment.user.profilePicture}`}
-                        alt={`${comment.user.username}'s profile`}
-                        className="w-8 h-8 rounded-full object-cover mr-2"
-                      />
-                    )}
-                    <div>
-                      <span className="text-gray-800 font-semibold">{comment.user.username}</span>
-                      <p className="text-gray-600">{comment.text}</p>
-                    </div>
-                  </div>
-                ))}
-                {post.comments.length > 2 && (
+              <button
+                onClick={() => setCommentingPostId(post._id)}
+                className="text-blue-500 hover:underline mt-4"
+              >
+                Comment
+              </button>
+              {commentingPostId === post._id && (
+                <div className="mt-4" ref={(el) => (commentsRefs.current[post._id] = el)}>
+                  <textarea
+                    className="w-full border rounded-lg p-2"
+                    rows="2"
+                    placeholder="Add a comment..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                  />
                   <button
-                    onClick={() => toggleShowAllComments(post._id)}
-                    className="text-blue-500 hover:underline"
+                    onClick={() => handleComment(post._id, commentText)}
+                    className="mt-2 bg-purple-600 text-white py-1 px-4 rounded-lg"
                   >
-                    {showAllComments[post._id] ? 'Hide comments' : 'View all comments'}
+                    Comment
                   </button>
-                )}
-              </div>
-            )}
-            {commentingPostId === post._id && (
-              <div className="mt-4" ref={(el) => (commentsRefs.current[post._id] = el)}>
-                <textarea
-                  className="w-full border rounded-lg p-2"
-                  rows="2"
-                  placeholder="Add a comment..."
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                />
-                <button
-                  onClick={() => handleComment(post._id, commentText)}
-                  className="mt-2 bg-purple-600 text-white py-1 px-4 rounded-lg"
-                >
-                  Comment
-                </button>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
