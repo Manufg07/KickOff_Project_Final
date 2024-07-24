@@ -166,4 +166,5 @@ router.get('/posts/user', authMiddleware, async (req, res) => {
   }
 });
 
+
 module.exports = router;
