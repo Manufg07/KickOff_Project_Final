@@ -36,10 +36,7 @@ app.use("/admin", adminRoute);
 app.use('/user', userRoutes);
 app.use('/pt', postRoutes);
 
-// app.get('/admin/dashboard', verifyAdminToken, (req, res) => {
-//   res.send('Welcome to the Admin Dashboard');
-// });
-// Fetch Champions League data from football-data.org
+// Fetch data from football-data.org
 app.get('/api/football', async (req, res) => {
   try {
     const apiKey = process.env.FOOTBALL_DATA_API_KEY;
@@ -81,10 +78,10 @@ app.get('/api/football', async (req, res) => {
     };
 
     console.log('API Response:', responseData);
-    res.json(responseData);
+    // res.json(responseData);
   } catch (error) {
     console.error('Error fetching football data:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
+    // res.status(500).json({ error: 'Failed to fetch data' });
   }
 });
 
