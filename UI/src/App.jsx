@@ -23,6 +23,7 @@ import AdminForgot from "./Components/Admin/AdminForgot";
 import ChampionsLeague from "./Components/User/ChampionsLeague";
 import UserResetPassword from "./Components/User/UserResetPassword";
 import PostEngagement from "./Components/Admin/PostEngagement";
+import FriendsProfile from "./Components/User/FriendsProfile";
 // import '../App.css'
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
       <Route path="/" element={<UserLayout/>}>
         <Route path="/home" element={<HomePage/>}/>
         <Route path="/profile" element={<UserProfile/>}/>
+        <Route path="/user/:userId" element={<FriendsProfile />} />
         <Route path="/leagues" element={<Leagues/>}/>
         <Route path="FL" element={<FootballLeagues />} />
           <Route path=":league" element={<ChampionsLeague />} />

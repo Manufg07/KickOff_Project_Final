@@ -150,6 +150,8 @@ router.get('/fposts', verifyToken, async (req, res) => {
   }
 });
 
+
+
 router.delete('/posts/:postId', verifyToken, async (req, res) => {
   try {
     const postId = req.params.postId;

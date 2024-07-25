@@ -8,53 +8,54 @@ const SidebarRight = ({ updateConnectedFriends }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/user/friend-suggestions', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
+    const fetchFriendSuggestions = async () => {
+      try {
+        const response = await fetch('/api/user/friend-suggestions', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch friend suggestions');
+        const data = await response.json();
         if (Array.isArray(data)) {
-          console.log('Friend suggestions:', data); 
           setFriendSuggestions(data);
         } else {
           console.error('Data is not an array:', data);
           setFriendSuggestions([]);
         }
-        setLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching friend suggestions:', error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchFriendSuggestions();
   }, []);
 
-  const handleFollow = (userId) => {
-    fetch(`/api/user/follow/${userId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('Follow successful:', data);
-          setFriendSuggestions((prevSuggestions) =>
-            prevSuggestions.filter((friend) => friend._id !== userId)
-          );
-          updateConnectedFriends();
-        } else {
-          console.error('Follow failed:', data);
+  const handleFollow = async (userId) => {
+    try {
+      const response = await fetch(`/api/user/follow/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      })
-      .catch(error => {
-        console.error('Error following user:', error);
       });
+      const data = await response.json();
+      if (data.success) {
+        setFriendSuggestions(prevSuggestions =>
+          prevSuggestions.filter(friend => friend._id !== userId)
+        );
+        updateConnectedFriends();
+      } else {
+        console.error('Follow failed:', data);
+      }
+    } catch (error) {
+      console.error('Error following user:', error);
+    }
   };
 
   if (loading) {
@@ -66,7 +67,7 @@ const SidebarRight = ({ updateConnectedFriends }) => {
       <h2 className="text-lg font-semibold text-purple-600 mb-4">Friends</h2>
       <div id="friendSuggestions">
         {Array.isArray(friendSuggestions) && friendSuggestions.length > 0 ? (
-          friendSuggestions.map((friend) => (
+          friendSuggestions.map(friend => (
             <div key={friend._id} className="mb-4 flex items-center justify-between">
               <div className="flex items-center">
                 {friend.profilePicture && (
@@ -76,7 +77,7 @@ const SidebarRight = ({ updateConnectedFriends }) => {
                     className="w-8 h-8 rounded-full object-cover mr-2"
                   />
                 )}
-                <Link to={`/user/${friend._id}`} className="text-gray-800">{friend.username}</Link>
+                <Link to={`/user/${friend.username}`} className="text-gray-800">{friend.username}</Link>
               </div>
               <button
                 onClick={() => handleFollow(friend._id)}
@@ -91,22 +92,22 @@ const SidebarRight = ({ updateConnectedFriends }) => {
         )}
       </div>
 
-      <div>
+      <div className="mt-8">
         <h3 className="text-md font-semibold">Recent Matches</h3>
         <div className="mb-2">
-          <img src={uefa} alt="Match 1" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src={uefa} alt="Team A vs Team B" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
           <p className="text-gray-600">Team A vs Team B</p>
         </div>
         <div className="mb-2">
-          <img src={match2} alt="Match 2" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src={match2} alt="Team C vs Team D" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
           <p className="text-gray-600">Team C vs Team D</p>
         </div>
       </div>
 
-      <div>
+      <div className="mt-8">
         <h3 className="text-md font-semibold">Upcoming Events</h3>
         <div className="mb-2">
-          <img src="/images/uefA.jpeg" alt="Event 1" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src="/images/uefA.jpeg" alt="Upcoming Event" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
           <p className="text-gray-600">Event Name 1</p>
         </div>
       </div>
