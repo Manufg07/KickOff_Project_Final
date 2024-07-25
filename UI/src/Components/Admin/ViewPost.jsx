@@ -22,21 +22,26 @@ const ViewPost = () => {
     .catch(error => console.error('Error fetching posts:', error));
   }, []);
 
-  const deletePost = (postId) => {
-    fetch(`/api/admin/posts/${postId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
+  const deletePost = async (postId) => {
+    try {
+      const token = localStorage.getItem('Admintoken');
+      const response = await fetch(`/api/user/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        },
+      });
+  
       if (!response.ok) {
-        return response.text().then(text => { throw new Error(text) });
+        throw new Error('Network response was not ok');
       }
-      // Update state after deletion
-      setPosts(posts.filter(post => post._id !== postId));
-    })
-    .catch(error => console.error('Error deleting post:', error));
+  
+      const data = await response.json();
+      console.log('Post deleted:', data);
+      // Optionally, update the state to remove the deleted post from the UI
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
   };
 
   return (
@@ -49,7 +54,7 @@ const ViewPost = () => {
               <thead>
                 <tr>
                   <th className="px-6 py-3 bg-indigo-100 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Post ID</th>
-                  <th className="px-6 py-3 bg-indigo-100 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">User ID</th>
+                  {/* <th className="px-6 py-3 bg-indigo-100 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">User ID</th> */}
                   <th className="px-6 py-3 bg-indigo-100 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Text</th>
                   <th className="px-6 py-3 bg-indigo-100 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Image</th>
                   <th className="px-6 py-3 bg-indigo-100 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Video</th>
@@ -67,7 +72,7 @@ const ViewPost = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{post.video ? <video src={`http://localhost:5000/uploads/${post.video}`} className="h-20" controls /> : 'No Video'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(post.createdAt).toLocaleString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="bg-red-500 text-white rounded px-4 py-2 ml-2 hover:bg-red-600" onClick={() => deletePost(post._id)}>Delete</button>
+                      <button className="bg-red-500 text-white rounded px-4 py-2 ml-16 items-center hover:bg-red-600" onClick={() => deletePost(post._id)}>Delete</button>
                     </td>
                   </tr>
                 ))}

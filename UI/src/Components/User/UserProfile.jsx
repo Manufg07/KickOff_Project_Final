@@ -25,14 +25,10 @@ const UserProfile = () => {
       }
     })
       .then(response => {
-        console.log('API Response:', response);
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text) });
-        }
+        if (!response.ok) throw new Error('Failed to fetch user data');
         return response.json();
       })
       .then(data => {
-        console.log('User Data:', data);
         setUserData(data);
         setFormData({
           username: data.username,
@@ -49,23 +45,21 @@ const UserProfile = () => {
   };
 
   const fetchUserPosts = () => {
-    fetch('/api/pt/posts/user', {
+    fetch('/api/user/fposts', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
       .then(response => {
-        console.log('API Response:', response);
         if (!response.ok) {
           return response.text().then(text => { throw new Error(text) });
         }
         return response.json();
       })
       .then(posts => {
-        console.log('User Posts:', posts);
         setUserPosts(posts);
       })
-      .catch(error => console.error('Error fetching user posts:', error));
+      .catch(error => console.error('Error fetching user posts:', error.message));
   };
 
   const fetchConnectedFriends = () => {
@@ -75,14 +69,10 @@ const UserProfile = () => {
       }
     })
       .then(response => {
-        console.log('API Response:', response);
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text) });
-        }
+        if (!response.ok) throw new Error('Failed to fetch friends');
         return response.json();
       })
       .then(friends => {
-        console.log('Connected Friends:', friends);
         setConnectedFriends(friends);
       })
       .catch(error => console.error('Error fetching connected friends:', error));
@@ -90,10 +80,10 @@ const UserProfile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prevState => ({
+      ...prevState,
       [name]: value
-    });
+    }));
   };
 
   const handleFormSubmit = (e) => {
@@ -107,17 +97,34 @@ const UserProfile = () => {
       body: JSON.stringify(formData)
     })
       .then(response => {
+        if (!response.ok) throw new Error('Failed to update profile');
+        return response.json();
+      })
+      .then(data => {
+        setUserData(data);
+        setIsEditing(false);
+      })
+      .catch(error => console.error('Error updating user details:', error));
+  };
+
+  const handleDeletePost = (postId) => {
+    fetch(`/api/user/posts/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then(response => {
         if (!response.ok) {
           return response.text().then(text => { throw new Error(text) });
         }
         return response.json();
       })
-      .then(data => {
-        console.log('Updated User Data:', data);
-        setUserData(data);
-        setIsEditing(false);
+      .then(() => {
+        // Remove the deleted post from the state
+        setUserPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
       })
-      .catch(error => console.error('Error updating user details:', error));
+      .catch(error => console.error('Error deleting post:', error.message));
   };
 
   if (!userData) {
@@ -141,80 +148,6 @@ const UserProfile = () => {
           <p className="text-gray-600 text-center">Favorite Team: {userData.fav_team1}</p>
           <p className="text-gray-600 text-center">Favorite Player: {userData.fav_player}</p>
         </div>
-        {/* {isEditing ? (
-          <form onSubmit={handleFormSubmit} className="mt-6">
-            <div className="mb-4">
-              <label className="block text-gray-700">Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Favorite Team</label>
-              <input
-                type="text"
-                name="fav_team1"
-                value={formData.fav_team1}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Favorite Player</label>
-              <input
-                type="text"
-                name="fav_player"
-                value={formData.fav_player}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm"
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-md shadow-sm"
-            >
-              Cancel
-            </button>
-          </form>
-        ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="mt-6 ml-64 px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm"
-          >
-            Edit Profile
-          </button>
-        )} */}
         <div className="mt-6 text-center">
           <h2 className="text-xl font-semibold">Friends</h2>
           <p className="text-gray-600">Number of Friends: {userData.friends?.length || 0}</p>
@@ -244,7 +177,7 @@ const UserProfile = () => {
           <h2 className="text-xl font-semibold">Posts</h2>
           <p className="text-gray-600">Number of Posts: {userPosts.length || 0}</p>
           <div className="mt-4">
-            {userPosts.map((post) => (
+            {userPosts.map(post => (
               <div key={post._id} className="mb-4 text-left">
                 <h3 className="text-lg font-semibold">{post.text}</h3>
                 {post.image && <img src={`/api/uploads/${post.image}`} alt="Post" className="mt-2" />}
@@ -253,6 +186,12 @@ const UserProfile = () => {
                     <source src={`/api/uploads/${post.video}`} type="video/mp4" />
                   </video>
                 )}
+                <button
+                  onClick={() => handleDeletePost(post._id)}
+                  className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md shadow-sm"
+                >
+                  Delete Post
+                </button>
               </div>
             ))}
           </div>

@@ -22,7 +22,7 @@ const AdminLogin = () => {
       const data = await response.json();
       if (response.ok) {
         // Save the token and redirect to the admin homepage
-        localStorage.setItem('AuthToken', data.token);
+        localStorage.setItem('AdminToken', data.token);
         navigate('/Adminhome');
       } else {
         alert(data.error);

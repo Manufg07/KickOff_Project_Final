@@ -1,15 +1,19 @@
 const jwt = require('jsonwebtoken');
 
 const verifyAdminToken = (req, res, next) => {
-    const token = req.cookies.AuthToken || req.headers['authorization'];
+    // Get token from cookies or authorization header
+    const token = req.cookies.AdminToken || req.headers['authorization'];
 
     if (!token) {
-        return res.redirect('/auth/admin/login');
+        return res.status(401).json({ error: 'No token provided' }); // Changed to JSON response
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    // Remove 'Bearer ' prefix from the token if present
+    const tokenWithoutBearer = token.startsWith('Bearer ') ? token.slice(7) : token;
+
+    jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            return res.redirect('/auth/admin/login');
+            return res.status(401).json({ error: 'Invalid token' }); // Changed to JSON response
         }
         req.admin = decoded;
         next();

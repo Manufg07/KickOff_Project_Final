@@ -101,3 +101,14 @@
   .combined-animation {
     animation: spin 1s linear infinite, bounce 1s infinite;
   }
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

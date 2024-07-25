@@ -165,17 +165,40 @@ router.get('/profile', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/posts', verifyToken, async (req, res) => {
+router.get('/fposts', verifyToken, async (req, res) => {
   try {
-    const userId = req.user.id; // Extract user ID from authenticated request
-    console.log('User ID for Posts:', userId); // Debug statement
-    const posts = await Post.find({ user: userId });
-    console.log('Fetched Posts:', posts); // Debug statement
-
+    const userId = req.user.userId; // Extract the userId from the decoded JWT
+    const posts = await Post.find({ user: userId })
+      .populate('user', ['username', 'profilePicture'])
+      .populate('likes', ['username', 'profilePicture'])
+      .populate('comments.user', ['username', 'profilePicture'])
+      .sort({ createdAt: -1 });
     res.json(posts);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error fetching posts' });
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ error: 'Could not fetch posts' });
+  }
+});
+
+router.delete('/posts/:postId', verifyToken, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user.userId;
+
+    // Find the post and ensure it belongs to the logged-in user
+    const post = await Post.findOne({ _id: postId, user: userId });
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found or unauthorized' });
+    }
+
+    // Delete the post
+    await Post.findByIdAndDelete(postId);
+
+    res.json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ error: 'Could not delete post' });
   }
 });
 
@@ -255,6 +278,13 @@ router.post('/reset-password', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Invalid or expired token' });
   }
+});
+// Example endpoint in Node.js/Express
+router.get('/search/users', (req, res) => {
+  const searchQuery = req.query.q;
+  User.find({ username: { $regex: searchQuery, $options: 'i' } })
+    .then(users => res.json(users))
+    .catch(err => res.status(500).json({ error: err.message }));
 });
 
 module.exports = router;

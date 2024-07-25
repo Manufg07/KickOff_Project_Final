@@ -68,13 +68,17 @@ router.post('/login', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { adminId: admin._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+      { AdminId: admin._id , email: admin.email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+  );
 
-    // Send token to the client
-    res.status(200).json({ token });
+  res.cookie("AdminToken", token, { httpOnly: true });
+  res.json({
+      status: true,
+      message: "Login success",
+      token,
+  });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error logging in' });
@@ -166,5 +170,22 @@ router.get('/logout', (req, res) => {
   res.clearCookie('AuthToken');
   res.status(200).json({ message: 'Logout successful' });
 });
+// DELETE route for deleting a post
+// router.delete('/posts/:id', async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+//     const deletedPost = await Post.findByIdAndDelete(id);
+
+//     if (!deletedPost) {
+//       return res.status(404).json({ error: 'Post not found' });
+//     }
+
+//     res.status(200).json({ message: 'Post deleted successfully' });
+//   } catch (err) {
+//     console.error('Error deleting post:', err);
+//     res.status(500).json({ error: 'Error deleting post' });
+//   }
+// });
 
 module.exports = router;

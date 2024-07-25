@@ -11,6 +11,7 @@ const verifyToken = (req, res, next) => {
         if (err) {
             return res.redirect('/auth/login');
         }
+        console.log('Decoded JWT:', decoded);
         req.user = decoded;
         next();
     });
