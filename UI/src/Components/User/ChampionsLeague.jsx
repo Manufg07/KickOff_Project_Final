@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ChampionsLeague = () => {
+  const { league } = useParams();
   const [allMatches, setAllMatches] = useState([]);
   const [filteredMatches, setFilteredMatches] = useState([]);
   const [standings, setStandings] = useState([]);
@@ -8,8 +10,8 @@ const ChampionsLeague = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchLiveInfo();
-  }, []);
+    fetchLiveInfo(league);
+  }, [league]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -23,20 +25,19 @@ const ChampionsLeague = () => {
     }
   }, [searchTerm, allMatches]);
 
-  const fetchLiveInfo = async () => {
+  const fetchLiveInfo = async (league) => {
     try {
-        const response = await fetch('http://localhost:5000/api/football'); // Ensure the port matches your server
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log('Client Received Data:', data);
-        setAllMatches(data.matches);
-        setStandings(data.standings || []); // Handle missing standings
-        setScorers(data.scorers || []); // Handle missing scorers
+      const response = await fetch(`http://localhost:5000/api/football?league=${league}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setAllMatches(data.matches || []);
+      setStandings(data.standings || []);
+      setScorers(data.scorers || []);
     } catch (error) {
-        console.error('Error fetching live information:', error);
-        showError(error);
+      console.error('Error fetching live information:', error);
+      showError(error);
     }
   };
 
@@ -114,16 +115,15 @@ const ChampionsLeague = () => {
 
   const showError = (error) => {
     console.error('showError function called with:', error);
-    alert('Failed to load live information. Please try again later.');
+    alert(`Failed to load live information. Error: ${error.message}`);
   };
 
   return (
     <div className="bg-gray-100 text-gray-900 font-sans">
       <nav className="bg-white p-4 sticky top-0 z-50 flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <a href="#" className="text-2xl font-bold text-blue-600 hover:underline"></a>
           <span className="text-2xl font-bold text-blue-600"></span>
-          <h1 className="text-4xl font-bold text-indigo-600 text-center mb-8">Champions League Live Updates</h1>
+          <h1 className="text-4xl font-bold text-indigo-600 text-center mb-8">{league.replace('_', ' ')} Live Updates</h1>
         </div>
         <input
           id="search-input"
@@ -136,7 +136,6 @@ const ChampionsLeague = () => {
       </nav>
 
       <div className="max-w-7xl mx-auto mt-8 px-4">
-       
         <section id="match-results" className="mb-12">
           <h2 className="text-3xl font-semibold mb-4 text-center">Match Results</h2>
           <div id="match-results-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

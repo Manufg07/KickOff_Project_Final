@@ -1,11 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const AdminSidebar = () => {
+    const navigate = useNavigate();
     const toggleSubMenu = (submenuId) => {
         const submenu = document.getElementById(submenuId);
         submenu.classList.toggle('hidden');
     };
+    const handleLogout = () => {
+        localStorage.removeItem('AdminToken');
+        navigate('/');
+      };
   return (
     <>
     {/* <!-- Sidebar --> */}
@@ -41,15 +47,19 @@ const AdminSidebar = () => {
                         </button>
                         <ul id="analytics" className="submenu hidden ml-4 mt-2 space-y-2">
                             <li><Link to="/engagement" className="load-content block px-2 py-1 rounded-lg hover:bg-gray-700 transition duration-300" >User Engagement</Link></li>
-                            <li><a href="#" className="load-content block px-2 py-1 rounded-lg hover:bg-gray-700 transition duration-300" data-file="/admin/content.html">Content Performance</a></li>
+                            <li><Link to="/post-engagement" className="load-content block px-2 py-1 rounded-lg hover:bg-gray-700 transition duration-300" data-file="/admin/content.html">Content Performance</Link></li>
                         </ul>
                     </li>
                 </ul>
             </div>
             <div className="p-4 mt-96">
-                <button className="w-full flex items-center justify-center rounded-lg py-1 bg-blue-800 hover:bg-red-500 transition duration-300 focus:outline-none">
-                <span className="ml-2"><a href="adminLogin.html"> Logout</a></span>
-                </button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              onClick={handleLogout}
+              className="bg-purple-600 border bottom-1 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-300 text-lg"
+            >
+              Logout
+            </motion.button>
             </div>
         </div>
     </>

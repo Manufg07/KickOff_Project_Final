@@ -145,23 +145,39 @@ router.get('/posts', async (req, res) => {
   }
 });
 
-// Endpoint to get user registrations per month
 router.get('/user-registrations', async (req, res) => {
   try {
     const registrations = await User.aggregate([
       {
         $group: {
-          _id: { $month: "$createdAt" },
+          _id: { $month: '$createdAt' },
           count: { $sum: 1 }
         }
       },
       { $sort: { _id: 1 } }
     ]);
-
     res.json(registrations);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error fetching registration data' });
+  } catch (error) {
+    console.error('Error fetching user registrations:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+router.get('/post-engagements', async (req, res) => {
+  try {
+    const engagements = await Post.aggregate([
+      {
+        $group: {
+          _id: { $month: '$createdAt' },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    res.json(engagements);
+  } catch (error) {
+    console.error('Error fetching post engagements:', error);
+    res.status(500).send('Server error');
   }
 });
 

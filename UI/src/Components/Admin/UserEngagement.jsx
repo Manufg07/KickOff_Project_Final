@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { Chart as ChartJS, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { motion } from 'framer-motion';
 
-ChartJS.register(Tooltip, Legend);
+ChartJS.register(Tooltip, Legend, ArcElement);
 
 const UserEngagement = () => {
   const [registrationData, setRegistrationData] = useState({
@@ -13,8 +15,7 @@ const UserEngagement = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch user registration data
-    fetch('/admin/user-registrations')
+    fetch('/api/admin/user-registrations')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -24,35 +25,31 @@ const UserEngagement = () => {
       .then(data => {
         const formattedData = formatRegistrationData(data);
         setRegistrationData(formattedData);
-        setIsLoading(false); // Data has been fetched and processed
+        setIsLoading(false);
       })
       .catch(error => {
         console.error('Error fetching registration data:', error);
-        setIsLoading(false); // Even if there's an error, we stop the loading state
+        setIsLoading(false);
       });
   }, []);
 
   const formatRegistrationData = (data) => {
-    // Assuming data is an array of objects with _id as month number and count as registration count
     const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const counts = Array(12).fill(0);
     data.forEach(item => {
-      counts[item._id - 1] = item.count; // -1 because _id is 1 for Jan, 2 for Feb, etc.
+      counts[item._id - 1] = item.count;
     });
     return {
       labels: labels,
       datasets: [
         {
           label: 'User Registrations',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: [
+            '#FF6384', '#36A2EB', '#FFCE56', '#FF9F40', '#4BC0C0',
+            '#FFCE56', '#FF6384', '#36A2EB', '#FF9F40', '#4BC0C0',
+            '#FFCE56', '#FF6384'
+          ],
           data: counts,
-          fill: true,
-          tension: 0.4,
         },
       ],
     };
@@ -62,8 +59,6 @@ const UserEngagement = () => {
     responsive: true,
     plugins: {
       tooltip: {
-        mode: 'index',
-        intersect: false,
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         titleColor: '#fff',
         bodyColor: '#fff',
@@ -73,34 +68,11 @@ const UserEngagement = () => {
         position: 'bottom',
         labels: {
           font: {
-            size: 12,
+            size: 14,
+            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+            weight: 'bold',
           },
-          usePointStyle: true,
-        },
-      },
-    },
-    interaction: {
-      mode: 'nearest',
-      axis: 'x',
-      intersect: false,
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: '#4B5563',
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(229, 231, 235, 0.3)',
-        },
-        ticks: {
-          color: '#4B5563',
+          color: '#4A90E2',
         },
       },
     },
@@ -111,16 +83,24 @@ const UserEngagement = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 ml-40">
+    <div className="container mx-auto p-4">
       <header className="mb-4">
         <h1 className="text-2xl font-bold text-center text-gray-800">User Registration Growth</h1>
       </header>
       <main className="bg-white p-4 rounded-lg shadow-lg">
-        <div className="max-w-md mx-auto">
+        <div className="max-w-lg mx-auto">
           {isLoading ? (
-            <p>Loading...</p> // Show loading state while fetching data
+            <div className="flex justify-center items-center">
+              <ClipLoader color="#4B5563" loading={isLoading} size={50} />
+            </div>
           ) : (
-            <Line data={registrationData} options={options} />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5 }}
+            >
+              <Doughnut data={registrationData} options={options} />
+            </motion.div>
           )}
         </div>
       </main>

@@ -109,10 +109,11 @@ const MainContent = () => {
       setPosts((prevPosts) =>
         prevPosts.map((post) => (post._id === updatedPost._id ? updatedPost : post))
       );
-      setCommentingPostId(null); // Reset the commenting post ID after comment is added
       setCommentText(''); // Clear the comment text
     } catch (error) {
       console.error('Error commenting on post:', error);
+    } finally {
+      setCommentingPostId(null); // Reset the commenting post ID after comment is added
     }
   };
   

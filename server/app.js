@@ -42,51 +42,52 @@ app.use('/pt', postRoutes);
 // Fetch Champions League data from football-data.org
 app.get('/api/football', async (req, res) => {
   try {
-      const apiKey = process.env.FOOTBALL_DATA_API_KEY;
+    const apiKey = process.env.FOOTBALL_DATA_API_KEY;
+    const league = req.query.league || 'CL'; // Default to Champions League if no league is specified
 
-      const matchesResponse = await fetch('https://api.football-data.org/v2/competitions/CL/matches', {
-          headers: {
-              'X-Auth-Token': apiKey
-          }
+    const leagueIds = {
+      champions_league: 'CL',
+      premier_league: 'PL',
+      la_liga: 'PD',
+      serie_a: 'SA',
+      bundesliga: 'BL1',
+      ligue_1: 'FL1',
+      indian_super_league: 'ISL',
+      eredivisie: 'DED'
+    };
+
+    const leagueId = leagueIds[league.toLowerCase()] || 'CL'; // Default to CL if league is not found
+
+    const fetchFromAPI = async (url) => {
+      const response = await fetch(url, {
+        headers: {
+          'X-Auth-Token': apiKey,
+        },
       });
-      if (!matchesResponse.ok) {
-          throw new Error(`HTTP error! status: ${matchesResponse.status}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const matchesData = await matchesResponse.json();
+      return response.json();
+    };
 
-      const standingsResponse = await fetch('https://api.football-data.org/v2/competitions/CL/standings', {
-          headers: {
-              'X-Auth-Token': apiKey
-          }
-      });
-      if (!standingsResponse.ok) {
-          throw new Error(`HTTP error! status: ${standingsResponse.status}`);
-      }
-      const standingsData = await standingsResponse.json();
+    const matchesData = await fetchFromAPI(`https://api.football-data.org/v2/competitions/${leagueId}/matches`);
+    const standingsData = await fetchFromAPI(`https://api.football-data.org/v2/competitions/${leagueId}/standings`);
+    const scorersData = await fetchFromAPI(`https://api.football-data.org/v2/competitions/${leagueId}/scorers`);
 
-      const scorersResponse = await fetch('https://api.football-data.org/v2/competitions/CL/scorers', {
-          headers: {
-              'X-Auth-Token': apiKey
-          }
-      });
-      // if (!scorersResponse.ok) {
-      //     throw new Error(`HTTP error! status: ${scorersResponse.status}`);
-      // }
-      const scorersData = await scorersResponse.json();
+    const responseData = {
+      matches: matchesData.matches,
+      standings: standingsData.standings,
+      scorers: scorersData.scorers,
+    };
 
-      const responseData = {
-          matches: matchesData.matches,
-          standings: standingsData.standings,
-          scorers: scorersData.scorers
-      };
-
-      console.log('API Response:', responseData);
-      // res.json(responseData);
+    console.log('API Response:', responseData);
+    res.json(responseData);
   } catch (error) {
-      console.error('Error fetching football data:', error);
-      // res.status(500).json({ error: 'Failed to fetch data' });
+    console.error('Error fetching football data:', error);
+    res.status(500).json({ error: 'Failed to fetch data' });
   }
 });
+
 
 
 

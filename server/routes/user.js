@@ -24,36 +24,6 @@ router.get('/profile', auth, async (req, res) => {
     }
   });
   
-// Update user profile
-// router.post('/update-profile', auth, async (req, res) => {
-//     const { username, email, phone, fav_team1, fav_player } = req.body;
-  
-//     try {
-//       // Update user details in database
-//       const user = await User.findByIdAndUpdate(
-//         req.user.userId,
-//         { username, email, phone, fav_team1, fav_player },
-//         { new: true }
-//       );
-  
-//       if (!user) {
-//         return res.status(404).json({ error: 'User not found' });
-//       }
-  
-//       res.json({ message: 'Profile updated successfully', user });
-//     } catch (error) {
-//       res.status(500).json({ error: error.message });
-//     }
-//   });
-
-// // Helper function to shuffle array
-// const shuffleArray = (array) => {
-//   for (let i = array.length - 1; i > 0; i--) {
-//     const j = Math.floor(Math.random() * (i + 1));
-//     [array[i], array[j]] = [array[j], array[i]];
-//   }
-//   return array;
-// };
 
 router.post('/update-profile', auth, profileUpload.single('profilePicture'), async (req, res) => {
   const { username, email, phone, fav_team1, fav_player } = req.body;
