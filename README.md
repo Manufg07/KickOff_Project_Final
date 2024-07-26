@@ -1,4 +1,6 @@
-# KICK OFF
+# KICK OFF 
+![MERN Stack](https://img.shields.io/badge/MERN-Stack-blue)
+
 KickOff is a football-related social media app that connects football enthusiasts.
 Users can register, log in, post their thoughts, follow other users, and keep up with live match results and top scorers from different leagues.
 
@@ -22,6 +24,8 @@ Users can register, log in, post their thoughts, follow other users, and keep up
     ~~~
   - open
     [http://localhost:3000/]
+
+    > **Note:** Remember to update your environment variables.
 
   # Features
   ### User Features
