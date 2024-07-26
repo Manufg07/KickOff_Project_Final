@@ -23,7 +23,8 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   - open
     [http://localhost:3000/]
 
-  # User Features
+  # Features
+  ### User Features
   - User Registration and Login: Secure registration and login system.
   - View Other Users' Content: Explore posts from other football fans.
   - Post Thoughts: Share your thoughts and updates with your followers.
@@ -35,7 +36,7 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   - View Own Profile: View and manage your own profile.
   - Delete Posted Content: Delete your posts if you change your mind.
  
-  # Admin Features
+  ### Admin Features
   - Admin Login: Secure login for admin access.
   - Manage Users: View user details and delete users if necessary.
   - View Posts: Monitor the posts made by users.
