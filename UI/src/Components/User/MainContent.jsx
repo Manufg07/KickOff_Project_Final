@@ -187,16 +187,16 @@ const MainContent = () => {
                       <h4 className="text-md font-semibold mb-2">Liked by</h4>
                       {post.likes.length > 0 ? (
                         post.likes.map((like) => (
-                          <div key={like._id} className="flex items-center mt-2">
-                            {like.profilePicture && (
+                          like.profilePicture && (
+                            <div key={like._id} className="flex items-center mt-2">
                               <img
                                 src={`/api/uploads/profile_pictures/${like.profilePicture}`}
                                 alt={`${like.username}'s profile`}
                                 className="w-8 h-8 rounded-full object-cover mr-2"
                               />
-                            )}
-                            <span className="text-gray-800 font-semibold">{like.username}</span>
-                          </div>
+                              <span className="text-gray-800 font-semibold">{like.username}</span>
+                            </div>
+                          )
                         ))
                       ) : (
                         <p className="text-gray-600">No likes yet</p>
@@ -208,19 +208,21 @@ const MainContent = () => {
                   <div className="mt-4">
                     <h4 className="text-md font-semibold">Comments</h4>
                     {post.comments.slice(0, showAllComments[post._id] ? post.comments.length : 2).map((comment) => (
-                      <div key={comment._id} className="mt-2 flex items-start">
-                        {comment.user.profilePicture && (
-                          <img
-                            src={`/api/uploads/profile_pictures/${comment.user.profilePicture}`}
-                            alt={`${comment.user.username}'s profile`}
-                            className="w-8 h-8 rounded-full object-cover mr-2"
-                          />
-                        )}
-                        <div>
-                          <span className="text-gray-800 font-semibold">{comment.user.username}</span>
-                          <p className="text-gray-600">{comment.text}</p>
+                      comment.user && ( // Check if comment.user exists
+                        <div key={comment._id} className="mt-2 flex items-start">
+                          {comment.user.profilePicture && (
+                            <img
+                              src={`/api/uploads/profile_pictures/${comment.user.profilePicture}`}
+                              alt={`${comment.user.username}'s profile`}
+                              className="w-8 h-8 rounded-full object-cover mr-2"
+                            />
+                          )}
+                          <div>
+                            <span className="text-gray-800 font-semibold">{comment.user.username}</span>
+                            <p className="text-gray-600">{comment.text}</p>
+                          </div>
                         </div>
-                      </div>
+                      )
                     ))}
                     {post.comments.length > 2 && (
                       <button

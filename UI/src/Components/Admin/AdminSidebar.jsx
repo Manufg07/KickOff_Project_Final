@@ -37,7 +37,7 @@ const AdminSidebar = () => {
                         </button>
                         <ul id="contentManagement" className="submenu hidden ml-4 mt-2 space-y-2">
                             <li><Link to="/post" className="block px-2 py-1 rounded-lg hover:bg-gray-700 transition duration-300">Manage Posts</Link></li>
-                            {/* <li><a href="#" className="block px-2 py-1 rounded-lg hover:bg-gray-700 transition duration-300">Manage Comments</a></li> */}
+                            {/*<li><a href="#" className="block px-2 py-1 rounded-lg hover:bg-gray-700 transition duration-300">Manage Comments</a></li> */}
                         </ul>
                     </li>
                     <li>
