@@ -39,7 +39,7 @@ const MainContent = () => {
           ...prevShowAllComments,
           [postId]: false,
         }));
-      }  
+      }
     });
   };
 
@@ -99,24 +99,24 @@ const MainContent = () => {
         },
         body: JSON.stringify({ text }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const updatedPost = await response.json();
-      // Update local state immediately
+
       setPosts((prevPosts) =>
         prevPosts.map((post) => (post._id === updatedPost._id ? updatedPost : post))
       );
-      setCommentText(''); // Clear the comment text
+      setCommentText('');
     } catch (error) {
       console.error('Error commenting on post:', error);
     } finally {
-      setCommentingPostId(null); // Reset the commenting post ID after comment is added
+      setCommentingPostId(null);
     }
   };
-  
+
   const toggleShowAllComments = (postId) => {
     setShowAllComments((prevShowAllComments) => ({
       ...prevShowAllComments,
@@ -132,7 +132,7 @@ const MainContent = () => {
   };
 
   return (
-    <div className="col-span-6 bg-white shadow-lg p-4 rounded-lg mt-8">
+    <div className="col-span-12 md:col-span-6 bg-white shadow-lg p-4 rounded-lg mt-8">
       <h2 className="text-lg font-semibold text-purple-600 mb-4">Latest</h2>
       <Post onPostCreated={handlePostCreated} />
       <div id="posts" className="mt-6 space-y-6">
@@ -144,10 +144,10 @@ const MainContent = () => {
                 {post.user.username}
               </h3>
               {post.image && (
-                <img src={`/api/uploads/${post.image}`} alt={`Post Image - ${post.text}`} className="mt-2" />
+                <img src={`/api/uploads/${post.image}`} alt={`Post Image - ${post.text}`} className="mt-2 w-full object-cover rounded-lg" />
               )}
               {post.video && (
-                <video controls className="mt-2">
+                <video controls className="mt-2 w-full rounded-lg">
                   <source src={`/api/uploads/${post.video}`} type="video/mp4" />
                 </video>
               )}
@@ -230,7 +230,7 @@ const MainContent = () => {
                   Comment
                 </button>
                 {commentingPostId === post._id && (
-                  <div className="mt-4" ref={(el) => (commentsRefs.current[post._id] = el)}>
+                  <div className="mt-4 w-full" ref={(el) => (commentsRefs.current[post._id] = el)}>
                     <textarea
                       className="w-full border rounded-lg p-2"
                       rows="2"

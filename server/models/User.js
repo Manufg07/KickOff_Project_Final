@@ -38,7 +38,9 @@ const userSchema = new Schema({
         type: String,
         required: false,
         trim: true,
-    },    
+    }, 
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },   
     profilePicture: { type: String },
     friends: [{
         type: Schema.Types.ObjectId,

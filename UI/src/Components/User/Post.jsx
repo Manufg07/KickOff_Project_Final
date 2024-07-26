@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import EmojiPicker from '../EmojiPicker'; // Import the custom emoji picker
 
 const Post = ({ onPostCreated }) => {
   const [isPostSectionVisible, setIsPostSectionVisible] = useState(false);
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
+  const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
 
   const togglePostButton = () => {
     setIsPostSectionVisible(!isPostSectionVisible);
@@ -41,11 +43,16 @@ const Post = ({ onPostCreated }) => {
     }
   };
 
+  const onEmojiClick = (emoji) => {
+    setText(prevText => prevText + emoji);
+    setIsEmojiPickerVisible(false);
+  };
+
   return (
     <>
       <h3
         id="togglePostButton"
-        className="text-md font-semibold cursor-pointer border border-gray-400 bg-gray-300 rounded-lg w-auto text-center"
+        className="text-md font-semibold cursor-pointer border border-gray-400 bg-gray-300 rounded-lg w-auto text-center p-2"
         onClick={togglePostButton}
       >
         Post Your Content
@@ -55,14 +62,26 @@ const Post = ({ onPostCreated }) => {
           <form id="postForm" encType="multipart/form-data" className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="postText" className="block text-gray-700 font-medium">Text</label>
-              <textarea
-                id="postText"
-                name="text"
-                rows="4"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              ></textarea>
+              <div className="relative">
+                <textarea
+                  id="postText"
+                  name="text"
+                  rows="4"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                ></textarea>
+                <button
+                  type="button"
+                  className="absolute top-2 right-2 bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition duration-200"
+                  onClick={() => setIsEmojiPickerVisible(!isEmojiPickerVisible)}
+                >
+                  😀
+                </button>
+                {isEmojiPickerVisible && (
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                )}
+              </div>
             </div>
             <div>
               <label htmlFor="postImage" className="block text-gray-700 font-medium">Image</label>

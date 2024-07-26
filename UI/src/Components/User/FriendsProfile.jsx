@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const UserProfile = () => {
+const FriendsProfile = () => {
+  const { username } = useParams();
   const [userData, setUserData] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
   const [connectedFriends, setConnectedFriends] = useState([]);
   const [formData, setFormData] = useState({
     username: '',
@@ -17,10 +18,10 @@ const UserProfile = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [username]);
 
   const fetchUserData = () => {
-    fetch('/api/user/profile', {
+    fetch(`/api/user/friend-profile/${username}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
@@ -39,8 +40,8 @@ const UserProfile = () => {
           fav_player: data.fav_player,
           profilePicture: data.profilePicture || ''
         });
-        fetchUserPosts(); // Fetch posts after fetching user data
-        fetchConnectedFriends(); // Fetch connected friends after fetching user data
+        fetchUserPosts();
+        fetchConnectedFriends();
       })
       .catch(error => console.error('Error fetching user details:', error));
   };
@@ -79,61 +80,12 @@ const UserProfile = () => {
       .catch(error => console.error('Error fetching connected friends:', error));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    fetch('/api/user/profile', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(formData)
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to update profile');
-        return response.json();
-      })
-      .then(data => {
-        setUserData(data);
-        setIsEditing(false);
-      })
-      .catch(error => console.error('Error updating user details:', error));
-  };
-
-  const handleDeletePost = (postId) => {
-    fetch(`/api/user/posts/${postId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text) });
-        }
-        return response.json();
-      })
-      .then(() => {
-        // Remove the deleted post from the state
-        setUserPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
-      })
-      .catch(error => console.error('Error deleting post:', error.message));
-  };
-
   if (!userData) {
     return <p>Loading...</p>;
   }
 
   return (
-<div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 via-pink-500 to-blue-500 ">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 via-pink-500 to-blue-500 ">
       <motion.div 
         className="bg-white shadow-2xl rounded-lg p-8 w-full max-w-2xl"
         initial={{ opacity: 0 }}
@@ -188,7 +140,7 @@ const UserProfile = () => {
             ))}
           </ul>
         </div>
-        <div className="mt-8 text-center">
+        {/* <div className="mt-8 text-center">
           <motion.h2 
             className="text-2xl font-semibold text-gray-800"
             initial={{ y: -50 }}
@@ -217,7 +169,7 @@ const UserProfile = () => {
               </motion.li>
             ))}
           </ul>
-        </div>
+        </div> */}
         <div className="mt-8 text-center">
           <motion.h2 
             className="text-2xl font-semibold text-gray-800"
@@ -228,7 +180,7 @@ const UserProfile = () => {
             Posts
           </motion.h2>
           <p className="text-gray-700">Number of Posts: {userPosts.length || 0}</p>
-          <div className="mt-6 space-y-6">
+          {/* <div className="mt-6 space-y-6">
             {userPosts.map(post => (
               <motion.div 
                 key={post._id} 
@@ -252,11 +204,11 @@ const UserProfile = () => {
                 </button>
               </motion.div>
             ))}
-          </div>
+          </div> */}
         </div>
       </motion.div>
     </div>
   );
 };
 
-export default UserProfile;
+export default FriendsProfile;

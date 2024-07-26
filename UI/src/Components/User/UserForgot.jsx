@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Bg from '../User/Images/bg.jpg';
-import '../../custom-animations.css'; 
+import '../../custom-animations.css';
 
 const UserForgot = () => {
   const [email, setEmail] = useState('');
@@ -8,16 +8,16 @@ const UserForgot = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const response = await fetch('/api/user/forgot-password', {
+      const response = await fetch('/api/user/forgot-password', { // Update this line
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
       });
-
+  
       const data = await response.json();
       setMessage(data.message || data.error);
     } catch (error) {

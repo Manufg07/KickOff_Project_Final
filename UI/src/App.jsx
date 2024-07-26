@@ -21,9 +21,9 @@ import UserForgot from "./Components/User/UserForgot";
 import Register from "./Components/User/Register";
 import AdminForgot from "./Components/Admin/AdminForgot";
 import ChampionsLeague from "./Components/User/ChampionsLeague";
-import UserResetPassword from "./Components/User/UserResetPassword";
 import PostEngagement from "./Components/Admin/PostEngagement";
 import FriendsProfile from "./Components/User/FriendsProfile";
+import ResetPassword from "./Components/User/ResetPassword";
 // import '../App.css'
 
 function App() {
@@ -39,8 +39,8 @@ function App() {
         <Route path="/user-register" element={<Register/>}/>
         <Route path="/forgot" element={<UserForgot/>}/>
         <Route path="/adminforgot" element={<AdminForgot/>}/>
-        <Route path="/forgot-password" element={<UserForgot/>}/>
-        <Route path="/reset-password" element={<UserResetPassword/>}/>
+        <Route path="/forgot-password" component={UserForgot} />
+        <Route path="/reset/:token" component={ResetPassword} />
       </Route>
 
 
@@ -55,7 +55,7 @@ function App() {
       <Route path="/" element={<UserLayout/>}>
         <Route path="/home" element={<HomePage/>}/>
         <Route path="/profile" element={<UserProfile/>}/>
-        <Route path="/user/:userId" element={<FriendsProfile />} />
+        <Route path="/user/:username" element={<FriendsProfile />} />
         <Route path="/leagues" element={<Leagues/>}/>
         <Route path="FL" element={<FootballLeagues />} />
           <Route path=":league" element={<ChampionsLeague />} />

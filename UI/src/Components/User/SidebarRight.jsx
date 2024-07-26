@@ -63,7 +63,7 @@ const SidebarRight = ({ updateConnectedFriends }) => {
   }
 
   return (
-    <div className="col-span-3 bg-white shadow-lg p-4 rounded-lg">
+    <div className="col-span-12 md:col-span-3 bg-white shadow-lg p-4 rounded-lg">
       <h2 className="text-lg font-semibold text-purple-600 mb-4">Friends</h2>
       <div id="friendSuggestions">
         {Array.isArray(friendSuggestions) && friendSuggestions.length > 0 ? (
@@ -95,11 +95,11 @@ const SidebarRight = ({ updateConnectedFriends }) => {
       <div className="mt-8">
         <h3 className="text-md font-semibold">Recent Matches</h3>
         <div className="mb-2">
-          <img src={uefa} alt="Team A vs Team B" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src={uefa} alt="Team A vs Team B" className="rounded-lg shadow-md hover:shadow-xl transition duration-300 w-full"/>
           <p className="text-gray-600">Team A vs Team B</p>
         </div>
         <div className="mb-2">
-          <img src={match2} alt="Team C vs Team D" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src={match2} alt="Team C vs Team D" className="rounded-lg shadow-md hover:shadow-xl transition duration-300 w-full"/>
           <p className="text-gray-600">Team C vs Team D</p>
         </div>
       </div>
@@ -107,7 +107,7 @@ const SidebarRight = ({ updateConnectedFriends }) => {
       <div className="mt-8">
         <h3 className="text-md font-semibold">Upcoming Events</h3>
         <div className="mb-2">
-          <img src="/images/uefA.jpeg" alt="Upcoming Event" className="rounded-lg shadow-md hover:shadow-xl transition duration-300"/>
+          <img src="/images/uefA.jpeg" alt="Upcoming Event" className="rounded-lg shadow-md hover:shadow-xl transition duration-300 w-full"/>
           <p className="text-gray-600">Event Name 1</p>
         </div>
       </div>

@@ -36,7 +36,8 @@ app.use("/admin", adminRoute);
 app.use('/user', userRoutes);
 app.use('/pt', postRoutes);
 
-// Fetch data from football-data.org
+const cache = {};
+
 app.get('/api/football', async (req, res) => {
   try {
     const apiKey = process.env.FOOTBALL_DATA_API_KEY;
@@ -55,6 +56,14 @@ app.get('/api/football', async (req, res) => {
 
     const leagueId = leagueIds[league.toLowerCase()] || 'CL'; // Default to CL if league is not found
 
+    const cacheKey = `footballData_${leagueId}`;
+    const cachedData = cache[cacheKey];
+    
+    if (cachedData) {
+      console.log('Returning cached data');
+      return res.json(cachedData);
+    }
+
     const fetchFromAPI = async (url) => {
       const response = await fetch(url, {
         headers: {
@@ -62,7 +71,7 @@ app.get('/api/football', async (req, res) => {
         },
       });
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status} | URL: ${url}`);
       }
       return response.json();
     };
@@ -77,14 +86,19 @@ app.get('/api/football', async (req, res) => {
       scorers: scorersData.scorers,
     };
 
+    // Cache the response for 10 minutes (600000 milliseconds)
+    cache[cacheKey] = responseData;
+    setTimeout(() => {
+      delete cache[cacheKey];
+    }, 600000);
+
     console.log('API Response:', responseData);
-    // res.json(responseData);
+    res.json(responseData); // Make sure to send the response
   } catch (error) {
     console.error('Error fetching football data:', error);
-    // res.status(500).json({ error: 'Failed to fetch data' });
+    res.status(500).json({ error: 'Failed to fetch data', details: error.message });
   }
 });
-
 
 
 

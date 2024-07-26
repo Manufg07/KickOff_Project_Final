@@ -45,26 +45,26 @@ const SidebarLeft = () => {
 
   return (
     <>
-      <div className="col-span-3 bg-white shadow-lg p-4 space-y-4 rounded-lg">
+      <div className="col-span-12 md:col-span-3 bg-white shadow-lg p-4 space-y-4 rounded-lg">
         <h2 className="text-lg font-semibold text-purple-600">Dashboard</h2>
         <div className="space-y-4">
           <div>
             <h3 className="text-md font-semibold">Connected Friends</h3>
             <div id="connectedFriends">
-            <ul className="mt-2">
-            {connectedFriends.map(friend => (
-              <li key={friend._id} className="text-gray-700 flex items-center my-2">
-                {friend.profilePicture && (
-                  <img
-                    src={`/api/uploads/profile_pictures/${friend.profilePicture}`}
-                    alt="Friend Profile"
-                    className="w-8 h-8 rounded-full object-cover mr-2"
-                  />
-                )}
-                {friend.username}
-              </li>
-            ))}
-          </ul>
+              <ul className="mt-2">
+                {connectedFriends.map(friend => (
+                  <li key={friend._id} className="text-gray-700 flex items-center my-2">
+                    {friend.profilePicture && (
+                      <img
+                        src={`/api/uploads/profile_pictures/${friend.profilePicture}`}
+                        alt="Friend Profile"
+                        className="w-8 h-8 rounded-full object-cover mr-2"
+                      />
+                    )}
+                    {friend.username}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
