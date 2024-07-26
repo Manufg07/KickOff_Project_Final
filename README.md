@@ -26,7 +26,9 @@ Users can register, log in, post their thoughts, follow other users, and keep up
 
 - Demo video
   [https://drive.google.com/file/d/1tSklPvKfbvqRktKOiZInJPbSK6n9oipl/view?usp=sharing]
-
+ 
+ # Getting Started
+ 
 - clone the code from github to a folder then open with visual studio code
   ~~~sh
   git clone
@@ -35,7 +37,6 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   https://github.com/Manufg07/KickOff_React.git
   ~~~
 
-  # Getting Started
   - open the directory and open terminal
     ~~~sh
     docker compose up --build
