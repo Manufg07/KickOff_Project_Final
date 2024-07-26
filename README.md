@@ -36,12 +36,11 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   ~~~sh
   https://github.com/Manufg07/KickOff_React.git
   ~~~
-
-  - open the directory and open terminal
+ - open the directory and open terminal
     ~~~sh
     docker compose up --build
     ~~~
-  - open
+ - open
     [http://localhost:3000/]
 
     > **Note:** Remember to update your environment variables.
