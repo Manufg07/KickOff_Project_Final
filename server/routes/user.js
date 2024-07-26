@@ -263,7 +263,6 @@ router.get('/friend-profile/:username', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return only necessary fields
     const userProfile = {
       username: user.username,
       email: user.email,

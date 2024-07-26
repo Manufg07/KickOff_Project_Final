@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { HeartIcon } from '@heroicons/react/solid';
 import { HeartIcon as HeartIconOutline } from '@heroicons/react/outline';
 import Post from './Post';
+import EmojiPicker from '../EmojiPicker'; // Import the custom emoji picker
 import '../../App.css';
 
 const MainContent = () => {
@@ -11,6 +12,7 @@ const MainContent = () => {
   const [commentText, setCommentText] = useState('');
   const [showAllComments, setShowAllComments] = useState({});
   const [showLikedUsers, setShowLikedUsers] = useState({});
+  const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false); // State for emoji picker visibility
 
   const likedUsersRefs = useRef({});
   const commentsRefs = useRef({});
@@ -39,6 +41,7 @@ const MainContent = () => {
           ...prevShowAllComments,
           [postId]: false,
         }));
+        setIsEmojiPickerVisible(false); // Hide emoji picker when clicking outside
       }
     });
   };
@@ -114,6 +117,7 @@ const MainContent = () => {
       console.error('Error commenting on post:', error);
     } finally {
       setCommentingPostId(null);
+      setIsEmojiPickerVisible(false); // Hide emoji picker after commenting
     }
   };
 
@@ -129,6 +133,11 @@ const MainContent = () => {
       ...prevShowLikedUsers,
       [postId]: !prevShowLikedUsers[postId],
     }));
+  };
+
+  const onEmojiClick = (emoji) => {
+    setCommentText(prevText => prevText + emoji);
+    setIsEmojiPickerVisible(false);
   };
 
   return (
@@ -231,13 +240,25 @@ const MainContent = () => {
                 </button>
                 {commentingPostId === post._id && (
                   <div className="mt-4 w-full" ref={(el) => (commentsRefs.current[post._id] = el)}>
-                    <textarea
-                      className="w-full border rounded-lg p-2"
-                      rows="2"
-                      placeholder="Add a comment..."
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                    />
+                    <div className="relative">
+                      <textarea
+                        className="w-full border rounded-lg p-2"
+                        rows="2"
+                        placeholder="Add a comment..."
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2 bg-gray-200 p-2 rounded-full hover:bg-gray-300 transition duration-200"
+                        onClick={() => setIsEmojiPickerVisible(!isEmojiPickerVisible)}
+                      >
+                        😀
+                      </button>
+                      {isEmojiPickerVisible && (
+                        <EmojiPicker onEmojiClick={onEmojiClick} />
+                      )}
+                    </div>
                     <button
                       onClick={() => handleComment(post._id, commentText)}
                       className="mt-2 bg-purple-600 text-white py-1 px-4 rounded-lg"

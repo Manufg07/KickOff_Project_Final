@@ -22,9 +22,7 @@ const FriendsProfile = () => {
 
   const fetchUserData = () => {
     fetch(`/api/user/friend-profile/${username}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
+     
     })
       .then(response => {
         if (!response.ok) throw new Error('Failed to fetch user data');
