@@ -42,4 +42,6 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   - View Posts: Monitor the posts made by users.
   - User Engagement Graph: Visual representation of user engagement on the platform.
   - Post Engagement Graph: Visual representation of post engagement metrics.
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
