@@ -23,7 +23,7 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   - open
     [http://localhost:3000/]
 
-  # Features
+  # User Features
   - User Registration and Login: Secure registration and login system.
   - View Other Users' Content: Explore posts from other football fans.
   - Post Thoughts: Share your thoughts and updates with your followers.
