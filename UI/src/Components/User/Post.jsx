@@ -38,6 +38,7 @@ const Post = ({ onPostCreated }) => {
       setImage(null);
       setVideo(null);
       setIsPostSectionVisible(false);
+      window.location.reload();
     } catch (error) {
       console.error('Error creating post', error);
     }

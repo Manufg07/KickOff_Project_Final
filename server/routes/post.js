@@ -121,6 +121,7 @@ router.post('/posts/:postId/comment', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Could not comment on post' });
   }
 });
+
 // Fetch post details including likes and comments
 router.get('/posts/:postId', authMiddleware, async (req, res) => {
   try {

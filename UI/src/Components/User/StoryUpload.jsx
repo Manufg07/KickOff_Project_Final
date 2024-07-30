@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const StoryUpload = () => {
   const [image, setImage] = useState(null);
@@ -36,6 +37,7 @@ const StoryUpload = () => {
       });
       const result = await response.json();
       console.log('Story uploaded:', result);
+      window.location.reload();
       // You can refresh the stories list here
     } catch (error) {
       console.error('Error uploading story:', error);
@@ -43,10 +45,28 @@ const StoryUpload = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
-      <input type="file" accept="image/*,video/*" onChange={handleFileChange} className="bg-gray-200 p-2 rounded-lg" />
-      <button type="submit" className="mt-2 bg-purple-600 text-white py-1 px-4 rounded-lg">Upload Story</button>
-    </form>
+    <motion.form
+      onSubmit={handleSubmit}
+      className="mb-4 p-4 bg-white shadow-lg rounded-lg"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <input
+        type="file"
+        accept="image/*,video/*"
+        onChange={handleFileChange}
+        className="bg-gray-200 p-2 rounded-lg w-full mb-2"
+      />
+      <motion.button
+        type="submit"
+        className="mt-2 bg-purple-600 text-white py-1 px-4 rounded-lg w-full"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Upload Story
+      </motion.button>
+    </motion.form>
   );
 };
 

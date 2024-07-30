@@ -74,6 +74,7 @@ const UpdateProfile = () => {
           if (data.user.profilePicture) {
             setProfilePictureUrl(`/uploads/profile_pictures/${data.user.profilePicture}`);
           }
+          window.location.reload();
         }
       })
       .catch(error => console.error('Error updating profile:', error));
