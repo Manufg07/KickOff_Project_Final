@@ -68,7 +68,17 @@ router.get('/friend-suggestions', verifyToken, async (req, res) => {
   const loggedInUserId = req.user.userId;
 
   try {
-    let users = await User.find({ _id: { $ne: loggedInUserId } }).select('username _id profilePicture');
+    const loggedInUser = await User.findById(loggedInUserId).select('friends');
+    const friendIds = loggedInUser.friends.map(friend => friend.toString());
+
+    console.log('Friend IDs:', friendIds); // Log 
+
+    let users = await User.find({
+      _id: { $ne: loggedInUserId, $nin: friendIds }
+    }).select('username _id profilePicture');
+
+    console.log('Filtered Users:', users); // Log f
+
     users = shuffleArray(users);
     res.json(users);
   } catch (error) {

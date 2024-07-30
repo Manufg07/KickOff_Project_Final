@@ -7,33 +7,34 @@ const SidebarRight = ({ updateConnectedFriends }) => {
   const [friendSuggestions, setFriendSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchFriendSuggestions = async () => {
-      try {
-        const response = await fetch('/api/user/friend-suggestions', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+    useEffect(() => {
+      const fetchFriendSuggestions = async () => {
+        try {
+          const response = await fetch('/api/user/friend-suggestions', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          if (!response.ok) throw new Error('Failed to fetch friend suggestions');
+          const data = await response.json();
+          console.log('Friend Suggestions:', data); // Log friend suggestions
+          if (Array.isArray(data)) {
+            setFriendSuggestions(data);
+          } else {
+            console.error('Data is not an array:', data);
+            setFriendSuggestions([]);
           }
-        });
-        if (!response.ok) throw new Error('Failed to fetch friend suggestions');
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setFriendSuggestions(data);
-        } else {
-          console.error('Data is not an array:', data);
-          setFriendSuggestions([]);
+        } catch (error) {
+          console.error('Error fetching friend suggestions:', error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching friend suggestions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFriendSuggestions();
-  }, []);
+      };
+    
+      fetchFriendSuggestions();
+    }, []);
 
   const handleFollow = async (userId) => {
     try {
@@ -49,6 +50,7 @@ const SidebarRight = ({ updateConnectedFriends }) => {
         setFriendSuggestions(prevSuggestions =>
           prevSuggestions.filter(friend => friend._id !== userId)
         );
+        window.location.reload();
         updateConnectedFriends();
       } else {
         console.error('Follow failed:', data);
