@@ -4,6 +4,8 @@ import { HeartIcon as HeartIconOutline } from '@heroicons/react/outline';
 import Post from './Post';
 import EmojiPicker from '../EmojiPicker'; // Import the custom emoji picker
 import '../../App.css';
+import StoryUpload from './StoryUpload';
+import Stories from './Stories';
 
 const MainContent = () => {
   const [posts, setPosts] = useState([]);
@@ -142,6 +144,8 @@ const MainContent = () => {
 
   return (
     <div className="col-span-12 md:col-span-6 bg-white shadow-lg p-4 rounded-lg mt-8">
+      <StoryUpload/>
+      <Stories/>
       <h2 className="text-lg font-semibold text-purple-600 mb-4">Latest</h2>
       <Post onPostCreated={handlePostCreated} />
       <div id="posts" className="mt-6 space-y-6">

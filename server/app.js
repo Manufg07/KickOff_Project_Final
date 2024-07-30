@@ -12,6 +12,7 @@ const authRoute = require("./routes/auth")
 const adminRoute = require("./routes/Admin")
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
+const storyRoutes = require('./routes/stories');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,6 +36,7 @@ app.use("/auth", authRoute);
 app.use("/admin", adminRoute);
 app.use('/user', userRoutes);
 app.use('/pt', postRoutes);
+app.use('/st', storyRoutes);
 
 const cache = {};
 

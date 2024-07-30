@@ -26,7 +26,20 @@ const profileStorage = multer.diskStorage({
 
 const profileUpload = multer({ storage: profileStorage });
 
+// Multer configuration for stories
+const storyStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/stories/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const storyUpload = multer({ storage: storyStorage });
+
 module.exports = {
   postUpload,
   profileUpload,
+  storyUpload,
 };
