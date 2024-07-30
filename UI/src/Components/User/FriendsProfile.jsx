@@ -115,7 +115,7 @@ const FriendsProfile = () => {
           <p className="text-gray-700 text-center">Favorite Player: {userData.fav_player}</p>
         </div>
         <div className="mt-8 text-center">
-          <motion.h2 
+          {/* <motion.h2 
             className="text-2xl font-semibold text-gray-800"
             initial={{ y: -50 }}
             animate={{ y: 0 }}
@@ -136,7 +136,7 @@ const FriendsProfile = () => {
                 {friend.username}
               </motion.li>
             ))}
-          </ul>
+          </ul> */}
         </div>
         {/* <div className="mt-8 text-center">
           <motion.h2 
@@ -169,7 +169,7 @@ const FriendsProfile = () => {
           </ul>
         </div> */}
         <div className="mt-8 text-center">
-          <motion.h2 
+          {/* <motion.h2 
             className="text-2xl font-semibold text-gray-800"
             initial={{ y: -50 }}
             animate={{ y: 0 }}
@@ -177,7 +177,7 @@ const FriendsProfile = () => {
           >
             Posts
           </motion.h2>
-          <p className="text-gray-700">Number of Posts: {userPosts.length || 0}</p>
+          <p className="text-gray-700">Number of Posts: {userPosts.length || 0}</p> */}
           {/* <div className="mt-6 space-y-6">
             {userPosts.map(post => (
               <motion.div 

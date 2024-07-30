@@ -9,7 +9,7 @@ services:
     volumes:
       - mongo_volume:/data/db
   api:
-    image: api
+    image: kickoffapi
     depends_on:
       - mongodb
     build: 
@@ -19,7 +19,7 @@ services:
       - 5000:5000
 
   ui:
-    image: ui
+    image: kickoffui
     depends_on:
       - api
     build:
