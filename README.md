@@ -24,7 +24,7 @@ Users can register, log in, post their thoughts, follow other users, and keep up
   - User Engagement Graph: Visual representation of user engagement on the platform.
   - Post Engagement Graph: Visual representation of post engagement metrics.
 
-- Demo video
+##  Demo video
   [https://drive.google.com/file/d/1tSklPvKfbvqRktKOiZInJPbSK6n9oipl/view?usp=sharing]
  
  # Getting Started
